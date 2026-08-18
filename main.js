@@ -128,7 +128,7 @@ class BootScene extends Phaser.Scene {
   constructor() { super('BootScene'); }
 
   create() {
-    // Texturas de tiles genéricas (suelo, pared, pincho)
+    // Texturas de tiles genéricas
     this.createTileTexture('suelo', 64, 64, '#3a3a5c');
     this.createTileTexture('pared', 64, 64, '#8b4513');
     this.createTileTexture('pincho', 64, 64, '#aaaaaa', true);
@@ -192,7 +192,6 @@ class BootScene extends Phaser.Scene {
       ctx.strokeStyle = '#00000033';
       ctx.lineWidth = 2;
       ctx.strokeRect(1,1,w-2,h-2);
-      // Sombreado
       ctx.fillStyle = '#ffffff11';
       ctx.fillRect(0,0,w,h/2);
     }
@@ -203,26 +202,21 @@ class BootScene extends Phaser.Scene {
     const c = document.createElement('canvas');
     c.width = 48; c.height = 48;
     const ctx = c.getContext('2d');
-    // Cuerpo
     ctx.fillStyle = '#111';
     ctx.beginPath();
     ctx.ellipse(24, 28, 14, 12, 0, 0, Math.PI*2);
     ctx.fill();
-    // Orejas
     ctx.fillStyle = '#111';
     ctx.beginPath(); ctx.moveTo(10,20); ctx.lineTo(12,6); ctx.lineTo(18,16); ctx.fill();
     ctx.beginPath(); ctx.moveTo(38,20); ctx.lineTo(36,6); ctx.lineTo(30,16); ctx.fill();
-    // Ojos (verdes)
     ctx.fillStyle = '#0f0';
     ctx.beginPath(); ctx.arc(20,26,2,0,Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.arc(28,26,2,0,Math.PI*2); ctx.fill();
     ctx.fillStyle = '#fff';
     ctx.beginPath(); ctx.arc(20.5,25.5,0.8,0,Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.arc(28.5,25.5,0.8,0,Math.PI*2); ctx.fill();
-    // Nariz
     ctx.fillStyle = '#ff9999';
     ctx.beginPath(); ctx.arc(24,30,1.5,0,Math.PI*2); ctx.fill();
-    // Contorno blanco para visibilidad
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 2;
     ctx.strokeRect(5,5,38,38);
@@ -233,26 +227,21 @@ class BootScene extends Phaser.Scene {
     const c = document.createElement('canvas');
     c.width = 48; c.height = 48;
     const ctx = c.getContext('2d');
-    // Cuerpo con color de rango
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.ellipse(24, 28, 14, 12, 0, 0, Math.PI*2);
     ctx.fill();
-    // Orejas
     ctx.fillStyle = color;
     ctx.beginPath(); ctx.moveTo(10,20); ctx.lineTo(12,6); ctx.lineTo(18,16); ctx.fill();
     ctx.beginPath(); ctx.moveTo(38,20); ctx.lineTo(36,6); ctx.lineTo(30,16); ctx.fill();
-    // Ojos
     ctx.fillStyle = eyeColor;
     ctx.beginPath(); ctx.arc(20,26,2,0,Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.arc(28,26,2,0,Math.PI*2); ctx.fill();
     ctx.fillStyle = '#fff';
     ctx.beginPath(); ctx.arc(20.5,25.5,0.8,0,Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.arc(28.5,25.5,0.8,0,Math.PI*2); ctx.fill();
-    // Nariz
     ctx.fillStyle = '#ff9999';
     ctx.beginPath(); ctx.arc(24,30,1.5,0,Math.PI*2); ctx.fill();
-    // Contorno
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 3;
     ctx.strokeRect(4,4,40,40);
@@ -476,7 +465,6 @@ class BootScene extends Phaser.Scene {
     ctx.fillRect(4,22,24,8);
     ctx.fillStyle = '#000';
     ctx.fillRect(12,26,8,6);
-    // Cerradura
     ctx.fillStyle = '#ffd700';
     ctx.fillRect(14,20,4,5);
     ctx.strokeStyle = '#000';
@@ -532,16 +520,20 @@ class MenuScene extends Phaser.Scene {
     this.add.text(400, 80, '⚔️ Mazmorras 2D ⚔️', { fontSize: '48px', color: '#ffd700' }).setOrigin(0.5);
 
     // Botones
-    const btnJugar = this.createButton(400, 200, 'Jugar', 0x3777ca);
+    const btnJugar = this.createButton(400, 180, 'Jugar', 0x3777ca);
     btnJugar.on('pointerdown', () => { this.scene.start('WorldScene'); });
 
-    const btnTienda = this.createButton(400, 300, 'Tienda', 0x43b581);
+    const btnTienda = this.createButton(400, 260, 'Tienda', 0x43b581);
     btnTienda.on('pointerdown', () => { this.scene.start('ShopScene'); });
 
-    const btnPerfil = this.createButton(400, 400, 'Perfil', 0x9b59b6);
+    const btnPerfil = this.createButton(400, 340, 'Perfil', 0x9b59b6);
     btnPerfil.on('pointerdown', () => { this.scene.start('ProfileScene'); });
 
-    // Mostrar oro y nivel brevemente
+    // Botón Modo Dios
+    const btnDios = this.createButton(400, 420, 'Modo Dios', 0xff4500);
+    btnDios.on('pointerdown', () => { this.activarModoDios(); });
+
+    // Mostrar oro y nivel
     const gold = parseInt(localStorage.getItem('gold') || '0');
     const level = parseInt(localStorage.getItem('level') || '1');
     this.add.text(400, 520, `🪙 ${gold}    Nivel: ${level}`, { fontSize: '24px', color: '#fff' }).setOrigin(0.5);
@@ -556,6 +548,19 @@ class MenuScene extends Phaser.Scene {
     btn.on('pointerout', () => btn.setScale(1));
     return btn;
   }
+
+  activarModoDios() {
+    localStorage.setItem('level', '50');
+    localStorage.setItem('xp', '0');
+    localStorage.setItem('gold', '10000');
+    localStorage.setItem('swordLevel', '10');
+    localStorage.setItem('armorLevel', '10');
+    localStorage.setItem('abilityLevel', '10');
+    localStorage.setItem('potions', '10');
+    localStorage.setItem('maxHP', '1000');
+    alert('¡Modo Dios activado! Ahora eres nivel 50 con todas las mejoras.');
+    this.scene.restart();
+  }
 }
 
 // ========== TIENDA ==========
@@ -566,11 +571,9 @@ class ShopScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('#1a1a2e');
     this.add.text(400, 40, 'Tienda', { fontSize: '40px', color: '#ffd700' }).setOrigin(0.5);
 
-    // Mostrar oro
     const gold = parseInt(localStorage.getItem('gold') || '0');
     this.goldText = this.add.text(400, 80, `🪙 ${gold}`, { fontSize: '24px', color: '#fff' }).setOrigin(0.5);
 
-    // Items disponibles
     const items = [
       { nombre: 'Espada básica', costo: 50, accion: 'comprarEspada', descripcion: '+5 daño' },
       { nombre: 'Armadura ligera', costo: 50, accion: 'comprarArmadura', descripcion: '+20 HP máx' },
@@ -592,7 +595,6 @@ class ShopScene extends Phaser.Scene {
       });
     });
 
-    // Botón volver
     const btnVolver = this.createButton(400, 520, 'Volver', 0x666666);
     btnVolver.on('pointerdown', () => this.scene.start('MenuScene'));
   }
@@ -661,7 +663,6 @@ class ShopScene extends Phaser.Scene {
       let xp = parseInt(localStorage.getItem('xp') || '0');
       xp += 100;
       localStorage.setItem('xp', xp);
-      // Verificar nivel (simplificado)
       this.verificarNivel();
       this.actualizarOro();
       alert('Has ganado 100 XP.');
@@ -686,7 +687,6 @@ class ShopScene extends Phaser.Scene {
   }
 
   verificarNivel() {
-    // Función global para actualizar nivel según XP
     const xp = parseInt(localStorage.getItem('xp') || '0');
     let level = parseInt(localStorage.getItem('level') || '1');
     let xpNecesario = 100 * level;
@@ -697,7 +697,6 @@ class ShopScene extends Phaser.Scene {
     }
     localStorage.setItem('xp', xp);
     localStorage.setItem('level', level);
-    // Aplicar evolución si corresponde
     aplicarEvolucion(level);
   }
 }
@@ -721,7 +720,6 @@ class ProfileScene extends Phaser.Scene {
     const ability = parseInt(localStorage.getItem('abilityLevel') || '1');
     const rango = getRango(nivel);
 
-    // Mostrar gato según rango
     const catKey = 'cat_' + rango.nombre.toLowerCase().replace(/ /g,'_');
     if (this.textures.exists(catKey)) {
       this.add.image(400, 140, catKey).setScale(2);
@@ -746,7 +744,6 @@ class ProfileScene extends Phaser.Scene {
       alert('Cómo jugar:\n\n- Usa el joystick para moverte.\n- Toca el botón ⚔️ para atacar.\n- Mata monstruos para ganar XP y oro.\n- Cada nivel requiere 100 XP más que el anterior.\n- Evoluciona a nivel 10, 20, 30, 40 y 50.\n- Visita la tienda para mejorar.\n- Encuentra portales en las esquinas del mapa principal para entrar a las mazmorras.\n- Derrota jefes para obtener cofres dorados.');
     });
 
-    // Botón volver
     const btnVolver = this.createButton(400, 520, 'Volver', 0x666666);
     btnVolver.on('pointerdown', () => this.scene.start('MenuScene'));
   }
@@ -768,7 +765,6 @@ class WorldScene extends Phaser.Scene {
     this.mapHeight = 100;
     this.playerSpeed = 200;
 
-    // Generar texturas de cesped y agua
     if (!this.textures.exists('cesped')) {
       this.createTileTexture('cesped', 64, 64, '#4a8f3c');
     }
@@ -776,30 +772,28 @@ class WorldScene extends Phaser.Scene {
       this.createTileTexture('agua', 64, 64, '#3366cc');
     }
 
-    // Fondo de césped
     this.add.tileSprite(0, 0, this.mapWidth * this.tileSize, this.mapHeight * this.tileSize, 'cesped').setOrigin(0);
 
-    // Obstáculos simples (rocas, árboles)
     this.obstacles = this.physics.add.staticGroup();
     for (let i = 0; i < 50; i++) {
       const x = Phaser.Math.Between(0, this.mapWidth - 1) * this.tileSize;
       const y = Phaser.Math.Between(0, this.mapHeight - 1) * this.tileSize;
-      if (x < 5*this.tileSize && y < 5*this.tileSize) continue; // zona segura
+      if (x < 5*this.tileSize && y < 5*this.tileSize) continue;
       const rock = this.add.image(x, y, 'pared').setOrigin(0);
       this.obstacles.add(rock);
       rock.body.setSize(this.tileSize, this.tileSize);
+      rock.setDepth(1);
     }
 
-    // Jugador
     const spawnX = 5 * this.tileSize;
     const spawnY = 5 * this.tileSize;
     this.player = this.physics.add.sprite(spawnX, spawnY, this.getCatTextureKey());
     this.player.setCollideWorldBounds(true);
+    this.player.setDepth(10);
     this.physics.add.collider(this.player, this.obstacles);
     this.playerHP = parseInt(localStorage.getItem('maxHP') || '100');
     this.playerMaxHP = this.playerHP;
 
-    // Enemigos básicos (slimes)
     this.enemies = this.physics.add.group();
     for (let i = 0; i < 20; i++) {
       const x = Phaser.Math.Between(10, this.mapWidth - 2) * this.tileSize;
@@ -811,11 +805,11 @@ class WorldScene extends Phaser.Scene {
       slime.damage = 5;
       slime.rangeDetect = 200;
       slime.body.setSize(30, 30);
-      slime.healthBar = this.add.graphics().setDepth(5);
+      slime.setDepth(5);
+      slime.healthBar = this.add.graphics().setDepth(6);
       this.physics.add.collider(slime, this.obstacles);
     }
 
-    // Portales a mazmorras (esquinas)
     this.portals = this.physics.add.staticGroup();
     const portalPositions = [
       { x: 2, y: 2, key: 'portal_cripta', mazmorraIndex: 0 },
@@ -828,11 +822,11 @@ class WorldScene extends Phaser.Scene {
       const posY = portal.y * this.tileSize;
       const portalSprite = this.portals.create(posX, posY, portal.key);
       portalSprite.setScale(0.8);
+      portalSprite.setDepth(2);
       portalSprite.setData('mazmorraIndex', portal.mazmorraIndex);
-      // Texto encima del portal
       this.add.text(posX + 32, posY - 10, MAZMORRAS[portal.mazmorraIndex].nombre, {
         fontSize: '16px', color: '#fff', align: 'center'
-      }).setOrigin(0.5);
+      }).setOrigin(0.5).setDepth(3);
     });
 
     this.physics.add.overlap(this.player, this.portals, (player, portal) => {
@@ -840,18 +834,15 @@ class WorldScene extends Phaser.Scene {
       this.scene.start('DungeonScene', { mazmorraIndex: idx });
     });
 
-    // Cámara
+    this.physics.world.setBounds(0, 0, this.mapWidth * this.tileSize, this.mapHeight * this.tileSize);
+
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
     this.cameras.main.setBounds(0, 0, this.mapWidth * this.tileSize, this.mapHeight * this.tileSize);
 
-    // HUD
     this.createHUD();
-
-    // Joystick virtual
     this.createVirtualJoystick();
-
-    // Botón de ataque
     this.createAttackButton();
+    this.createBackButton();
   }
 
   getCatTextureKey() {
@@ -903,14 +894,10 @@ class WorldScene extends Phaser.Scene {
   }
 
   createVirtualJoystick() {
-    this.joystickBase = this.add.circle(80, 380, 45, 0xffffff, 0.3).setScrollFactor(0);
-    this.joystickThumb = this.add.circle(80, 380, 20, 0xffffff, 0.8).setScrollFactor(0);
-    this.joystickBase.setDepth(10);
-    this.joystickThumb.setDepth(11);
-
+    this.joystickBase = this.add.circle(80, 380, 45, 0xffffff, 0.3).setScrollFactor(0).setDepth(30);
+    this.joystickThumb = this.add.circle(80, 380, 20, 0xffffff, 0.8).setScrollFactor(0).setDepth(31);
     this.joystickActive = false;
     this.joystickVector = { x: 0, y: 0 };
-
     this.input.on('pointerdown', (pointer) => {
       const dist = Phaser.Math.Distance.Between(pointer.x, pointer.y, this.joystickBase.x, this.joystickBase.y);
       if (dist <= 45) {
@@ -918,11 +905,9 @@ class WorldScene extends Phaser.Scene {
         this.updateJoystick(pointer);
       }
     });
-
     this.input.on('pointermove', (pointer) => {
       if (this.joystickActive) this.updateJoystick(pointer);
     });
-
     this.input.on('pointerup', () => {
       this.joystickActive = false;
       this.joystickThumb.x = this.joystickBase.x;
@@ -949,24 +934,28 @@ class WorldScene extends Phaser.Scene {
   }
 
   createAttackButton() {
-    const btn = this.add.circle(720, 380, 30, 0xff0000, 0.6).setScrollFactor(0).setDepth(10);
+    const btn = this.add.circle(720, 380, 30, 0xff0000, 0.6).setScrollFactor(0).setDepth(30);
     btn.setInteractive({ useHandCursor: true });
-    btn.on('pointerdown', () => {
-      this.playerAttack();
-    });
-    this.add.text(720, 380, '⚔️', { fontSize: '24px' }).setOrigin(0.5).setScrollFactor(0).setDepth(11);
+    btn.on('pointerdown', () => { this.playerAttack(); });
+    this.add.text(720, 380, '⚔️', { fontSize: '24px' }).setOrigin(0.5).setScrollFactor(0).setDepth(31);
+  }
+
+  createBackButton() {
+    const btn = this.add.circle(760, 40, 25, 0x666666, 0.8).setScrollFactor(0).setDepth(40);
+    btn.setInteractive({ useHandCursor: true });
+    this.add.text(760, 40, '🏠', { fontSize: '20px' }).setOrigin(0.5).setScrollFactor(0).setDepth(41);
+    btn.on('pointerdown', () => { this.scene.start('MenuScene'); });
   }
 
   playerAttack() {
     const now = this.time.now;
-    if (now - this.lastAttackTime < this.attackCooldown) return;
+    if (now - this.lastAttackTime < 500) return;
     this.lastAttackTime = now;
 
     const range = 60;
-    const paw = this.add.image(this.player.x + (this.facing === 'right' ? 30 : this.facing === 'left' ? -30 : 0), this.player.y + (this.facing === 'down' ? 30 : this.facing === 'up' ? -30 : 0), 'paw').setDepth(6);
+    const paw = this.add.image(this.player.x + (this.facing === 'right' ? 30 : this.facing === 'left' ? -30 : 0), this.player.y + (this.facing === 'down' ? 30 : this.facing === 'up' ? -30 : 0), 'paw').setDepth(15);
     this.tweens.add({ targets: paw, scale: 0.5, alpha: 0, duration: 200, onComplete: () => paw.destroy() });
 
-    // Daño a enemigos
     this.enemies.children.iterate((enemy) => {
       if (!enemy.active) return;
       const dist = Phaser.Math.Distance.Between(this.player.x, this.player.y, enemy.x, enemy.y);
@@ -986,7 +975,6 @@ class WorldScene extends Phaser.Scene {
 
   killEnemy(enemy) {
     enemy.destroy();
-    // Ganar XP y oro
     let xp = parseInt(localStorage.getItem('xp') || '0');
     xp += 15;
     localStorage.setItem('xp', xp);
@@ -1005,14 +993,12 @@ class WorldScene extends Phaser.Scene {
       xp -= xpNecesario;
       level++;
       xpNecesario = 100 * level;
-      // Actualizar atributos al subir nivel
       let maxHP = parseInt(localStorage.getItem('maxHP') || '100');
       maxHP += 10;
       localStorage.setItem('maxHP', maxHP);
       this.playerMaxHP = maxHP;
-      this.playerHP = Math.min(this.playerHP + 20, maxHP); // curar un poco
+      this.playerHP = Math.min(this.playerHP + 20, maxHP);
       this.updatePlayerHealthBar();
-      // Evolución si corresponde
       aplicarEvolucion(level);
     }
     localStorage.setItem('xp', xp);
@@ -1034,21 +1020,18 @@ class WorldScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    // Movimiento del jugador
     this.player.setVelocity(
       this.joystickVector.x * this.playerSpeed,
       this.joystickVector.y * this.playerSpeed
     );
     if (!this.joystickActive) this.player.setVelocity(0,0);
 
-    // Actualizar dirección
     if (Math.abs(this.joystickVector.x) > 0.2) {
       this.facing = this.joystickVector.x > 0 ? 'right' : 'left';
     } else if (Math.abs(this.joystickVector.y) > 0.2) {
       this.facing = this.joystickVector.y > 0 ? 'down' : 'up';
     }
 
-    // IA de enemigos (slimes)
     this.enemies.children.iterate((enemy) => {
       if (!enemy.active) return;
       const dx = this.player.x - enemy.x;
@@ -1060,7 +1043,6 @@ class WorldScene extends Phaser.Scene {
         enemy.setVelocity(0,0);
       }
 
-      // Colisión con jugador
       if (!this.invulnerable && Phaser.Geom.Intersects.RectangleToRectangle(this.player.getBounds(), enemy.getBounds())) {
         this.playerHP -= enemy.damage;
         this.updatePlayerHealthBar();
@@ -1076,12 +1058,12 @@ class WorldScene extends Phaser.Scene {
 
   playerDeath() {
     this.physics.pause();
-    this.add.text(400, 225, 'HAS MUERTO', { fontSize: '48px', color: '#ff0000' }).setOrigin(0.5).setScrollFactor(0).setDepth(30);
+    this.add.text(400, 225, 'HAS MUERTO', { fontSize: '48px', color: '#ff0000' }).setOrigin(0.5).setScrollFactor(0).setDepth(50);
     this.time.delayedCall(2000, () => this.scene.restart());
   }
 }
 
-// ========== ESCENA DE MAZMORRA (REUTILIZABLE) ==========
+// ========== ESCENA DE MAZMORRA ==========
 class DungeonScene extends Phaser.Scene {
   constructor() { super('DungeonScene'); }
 
@@ -1101,18 +1083,15 @@ class DungeonScene extends Phaser.Scene {
     this.invulnerableDuration = 1000;
     this.facing = 'right';
 
-    // Generar texturas de suelo/pared específicas
     this.createTileTexture('suelo_maz', 64, 64, mazmorra.colorSuelo);
     this.createTileTexture('pared_maz', 64, 64, mazmorra.colorPared);
 
-    // Mostrar mensaje
     this.mensajeEntrada = this.add.text(400, 225, mazmorra.mensaje, {
       fontSize: '24px', color: mazmorra.colorLetra, align: 'center',
       backgroundColor: '#000000aa', padding: { x: 10, y: 5 }
     }).setOrigin(0.5).setScrollFactor(0).setDepth(100);
     this.time.delayedCall(2500, () => this.mensajeEntrada.destroy());
 
-    // Construir mapa
     this.wallLayer = this.physics.add.staticGroup();
     this.spikeGroup = this.physics.add.staticGroup();
     this.enemies = this.physics.add.group();
@@ -1129,51 +1108,68 @@ class DungeonScene extends Phaser.Scene {
         const char = mapa[y][x];
         if (char === '#') {
           const wall = this.add.image(posX, posY, 'pared_maz').setOrigin(0);
+          wall.setDepth(1);
           this.wallLayer.add(wall);
           wall.body.setSize(this.tileSize, this.tileSize);
         } else if (char === '.') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
         } else if (char === 'P') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           this.player = this.physics.add.sprite(posX, posY, this.getCatTextureKey());
           this.player.setCollideWorldBounds(true);
+          this.player.setDepth(10);
           this.physics.add.collider(this.player, this.wallLayer);
         } else if (char === 'S') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           this.spawnEnemy('esqueleto', posX, posY);
         } else if (char === 'B') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           this.spawnEnemy('murcielago', posX, posY);
         } else if (char === 'Z') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           this.spawnEnemy('zombi', posX, posY);
         } else if (char === 'L') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           this.spawnEnemy('lobo', posX, posY);
         } else if (char === 'P') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           this.spawnEnemy('planta', posX, posY);
         } else if (char === 'G') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           this.spawnEnemy('golem', posX, posY);
         } else if (char === 'A') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           this.spawnEnemy('arana', posX, posY);
         } else if (char === 'E') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           this.spawnEnemy('esqueleto_llameante', posX, posY);
         } else if (char === 'T') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           const spike = this.add.image(posX, posY, 'pincho').setOrigin(0);
+          spike.setDepth(1);
           this.spikeGroup.add(spike);
           spike.body.setSize(this.tileSize, this.tileSize);
         } else if (char === 'C') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           const chest = this.chests.create(posX, posY, 'cofre_plata');
           chest.setData('tipo', 'plata');
           chest.body.setSize(this.tileSize, this.tileSize);
+          chest.setDepth(2);
         } else if (char === 'J') {
-          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          const suelo = this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          suelo.setDepth(0);
           const jefeDef = mazmorra.jefes.find(j => j.x === x && j.y === y);
           if (jefeDef) {
             this.spawnEnemy(jefeDef.tipo, posX, posY, true);
@@ -1185,23 +1181,23 @@ class DungeonScene extends Phaser.Scene {
     if (!this.player) {
       this.player = this.physics.add.sprite(64, 64, this.getCatTextureKey());
       this.player.setCollideWorldBounds(true);
+      this.player.setDepth(10);
       this.physics.add.collider(this.player, this.wallLayer);
     }
 
     this.physics.add.collider(this.enemies, this.wallLayer);
     this.physics.add.collider(this.jefes, this.wallLayer);
-    this.physics.add.collider(this.player, this.chests); // para no atravesar cofres
+    this.physics.add.collider(this.player, this.chests);
 
-    // Cámara
+    this.physics.world.setBounds(0, 0, mapa[0].length * this.tileSize, mapa.length * this.tileSize);
+
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
     this.cameras.main.setBounds(0, 0, mapa[0].length * this.tileSize, mapa.length * this.tileSize);
 
-    // HUD
     this.createHUD();
-
-    // Joystick y ataque
     this.createVirtualJoystick();
     this.createAttackButton();
+    this.createBackButton();
   }
 
   getCatTextureKey() {
@@ -1283,7 +1279,8 @@ class DungeonScene extends Phaser.Scene {
     sprite.tipo = tipo;
     sprite.esJefe = esJefe;
     sprite.body.setSize(30, 30);
-    sprite.healthBar = this.add.graphics().setDepth(5);
+    sprite.setDepth(5);
+    sprite.healthBar = this.add.graphics().setDepth(6);
     this.updateEnemyHealthBar(sprite);
     return sprite;
   }
@@ -1296,8 +1293,7 @@ class DungeonScene extends Phaser.Scene {
     const y = enemy.y - 20;
     enemy.healthBar.fillStyle(0x000000, 0.8);
     enemy.healthBar.fillRect(x, y, width, height);
-    const maxHealth = enemy.health; // asumiendo que health ya es el máximo
-    const healthPercent = Phaser.Math.Clamp(enemy.health / maxHealth, 0, 1);
+    const healthPercent = Phaser.Math.Clamp(enemy.health / enemy.health, 0, 1);
     enemy.healthBar.fillStyle(0xff0000, 1);
     enemy.healthBar.fillRect(x, y, width * healthPercent, height);
   }
@@ -1329,10 +1325,8 @@ class DungeonScene extends Phaser.Scene {
   }
 
   createVirtualJoystick() {
-    this.joystickBase = this.add.circle(80, 380, 45, 0xffffff, 0.3).setScrollFactor(0);
-    this.joystickThumb = this.add.circle(80, 380, 20, 0xffffff, 0.8).setScrollFactor(0);
-    this.joystickBase.setDepth(10);
-    this.joystickThumb.setDepth(11);
+    this.joystickBase = this.add.circle(80, 380, 45, 0xffffff, 0.3).setScrollFactor(0).setDepth(30);
+    this.joystickThumb = this.add.circle(80, 380, 20, 0xffffff, 0.8).setScrollFactor(0).setDepth(31);
     this.joystickActive = false;
     this.joystickVector = { x: 0, y: 0 };
     this.input.on('pointerdown', (pointer) => {
@@ -1371,19 +1365,26 @@ class DungeonScene extends Phaser.Scene {
   }
 
   createAttackButton() {
-    const btn = this.add.circle(720, 380, 30, 0xff0000, 0.6).setScrollFactor(0).setDepth(10);
+    const btn = this.add.circle(720, 380, 30, 0xff0000, 0.6).setScrollFactor(0).setDepth(30);
     btn.setInteractive({ useHandCursor: true });
     btn.on('pointerdown', () => { this.playerAttack(); });
-    this.add.text(720, 380, '⚔️', { fontSize: '24px' }).setOrigin(0.5).setScrollFactor(0).setDepth(11);
+    this.add.text(720, 380, '⚔️', { fontSize: '24px' }).setOrigin(0.5).setScrollFactor(0).setDepth(31);
+  }
+
+  createBackButton() {
+    const btn = this.add.circle(760, 40, 25, 0x666666, 0.8).setScrollFactor(0).setDepth(40);
+    btn.setInteractive({ useHandCursor: true });
+    this.add.text(760, 40, '🏠', { fontSize: '20px' }).setOrigin(0.5).setScrollFactor(0).setDepth(41);
+    btn.on('pointerdown', () => { this.scene.start('MenuScene'); });
   }
 
   playerAttack() {
     const now = this.time.now;
-    if (now - this.lastAttackTime < this.attackCooldown) return;
+    if (now - this.lastAttackTime < 500) return;
     this.lastAttackTime = now;
 
     const range = 60;
-    const paw = this.add.image(this.player.x + (this.facing === 'right' ? 30 : this.facing === 'left' ? -30 : 0), this.player.y + (this.facing === 'down' ? 30 : this.facing === 'up' ? -30 : 0), 'paw').setDepth(6);
+    const paw = this.add.image(this.player.x + (this.facing === 'right' ? 30 : this.facing === 'left' ? -30 : 0), this.player.y + (this.facing === 'down' ? 30 : this.facing === 'up' ? -30 : 0), 'paw').setDepth(15);
     this.tweens.add({ targets: paw, scale: 0.5, alpha: 0, duration: 200, onComplete: () => paw.destroy() });
 
     this.enemies.children.iterate((enemy) => {
@@ -1440,14 +1441,13 @@ class DungeonScene extends Phaser.Scene {
     localStorage.setItem('xp', xp);
     jefe.destroy();
 
-    // Cofre dorado
     const chest = this.chests.create(jefe.x, jefe.y, 'cofre_oro');
     chest.setData('tipo', 'oro');
     chest.body.setSize(this.tileSize, this.tileSize);
+    chest.setDepth(2);
     this.physics.add.overlap(this.player, chest, (player, cofre) => {
       if (cofre.active) {
         cofre.destroy();
-        // Recompensas aleatorias
         const tipo = cofre.getData('tipo');
         if (tipo === 'oro') {
           let potions = parseInt(localStorage.getItem('potions') || '0');
@@ -1624,7 +1624,7 @@ class DungeonScene extends Phaser.Scene {
 
   playerDeath() {
     this.physics.pause();
-    this.add.text(400, 225, 'HAS MUERTO', { fontSize: '48px', color: '#ff0000' }).setOrigin(0.5).setScrollFactor(0).setDepth(30);
+    this.add.text(400, 225, 'HAS MUERTO', { fontSize: '48px', color: '#ff0000' }).setOrigin(0.5).setScrollFactor(0).setDepth(50);
     this.time.delayedCall(2000, () => this.scene.restart());
   }
 }
@@ -1635,12 +1635,8 @@ function getRango(nivel) {
 }
 
 function aplicarEvolucion(nivel) {
-  // Actualizar apariencia del gato y stats según rango
   const rango = getRango(nivel);
-  // Guardar el rango actual en localStorage
   localStorage.setItem('rango', rango.nombre);
-  // Podríamos actualizar textura en vivo, pero por simplicidad se aplica al reiniciar escena.
-  // Nota: en WorldScene y DungeonScene, al crear el jugador se usa getCatTextureKey() que ya consulta el nivel.
 }
 
 // ========== CONFIGURACIÓN ==========
