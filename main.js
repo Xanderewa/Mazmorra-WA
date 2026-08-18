@@ -1,4 +1,8 @@
-// Configuración del juego
+// Detección de errores globales (muestra alerta)
+window.onerror = function(message, source, lineno, colno, error) {
+  alert('Error en JS: ' + message + ' (línea ' + lineno + ')');
+};
+
 const config = {
   type: Phaser.AUTO,
   width: 400,
@@ -21,39 +25,30 @@ class BootScene extends Phaser.Scene {
   constructor() { super('BootScene'); }
 
   create() {
-    // Generamos texturas simples
-    this.createTile('suelo', 0x3a3a5c, 64, 64);
-    this.createTile('pared', 0x8b4513, 64, 64);
-    this.createPlayerTexture();
-    this.createEnemyTexture();
-
-    this.scene.start('DungeonScene');
+    try {
+      // Creamos texturas usando canvas (más compatible)
+      this.createTexture('suelo', 64, 64, '#3a3a5c');
+      this.createTexture('pared', 64, 64, '#8b4513');
+      this.createTexture('player', 32, 32, '#4dd599');
+      this.createTexture('enemy', 32, 32, '#ff5555');
+      this.scene.start('DungeonScene');
+    } catch (e) {
+      alert('Error en BootScene: ' + e.message);
+    }
   }
 
-  createTile(key, color, w, h) {
-    const g = this.add.graphics();
-    g.fillStyle(color, 1);
-    g.fillRect(0, 0, w, h);
-    g.lineStyle(2, 0x000000, 0.3);
-    g.strokeRect(0, 0, w, h);
-    g.generateTexture(key, w, h);
-    g.destroy();
-  }
-
-  createPlayerTexture() {
-    const g = this.add.graphics();
-    g.fillStyle(0x4dd599, 1);
-    g.fillRoundedRect(0, 0, 32, 32, 6);
-    g.generateTexture('player', 32, 32);
-    g.destroy();
-  }
-
-  createEnemyTexture() {
-    const g = this.add.graphics();
-    g.fillStyle(0xff5555, 1);
-    g.fillCircle(16, 16, 16);
-    g.generateTexture('enemy', 32, 32);
-    g.destroy();
+  createTexture(key, w, h, color) {
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, w, h);
+    // Borde suave
+    ctx.strokeStyle = '#00000033';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(1, 1, w-2, h-2);
+    this.textures.addCanvas(key, canvas);
   }
 }
 
@@ -62,61 +57,58 @@ class DungeonScene extends Phaser.Scene {
   constructor() {
     super('DungeonScene');
     this.tileSize = 64;
-    this.mapWidth = 20;  // en tiles
+    this.mapWidth = 20;
     this.mapHeight = 15;
   }
 
   create() {
-    // Definición del mapa (0 = suelo, 1 = pared)
-    // Puedes modificar esta matriz para crear diferentes mazmorras
-    this.mapData = [
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-    ];
+    try {
+      // Mapa simplificado (igual que antes)
+      this.mapData = [
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      ];
 
-    // Creamos el grupo de suelos y paredes
-    this.groundLayer = this.add.group();
-    this.wallLayer = this.physics.add.staticGroup();
+      this.groundLayer = this.add.group();
+      this.wallLayer = this.physics.add.staticGroup();
 
-    for (let y = 0; y < this.mapHeight; y++) {
-      for (let x = 0; x < this.mapWidth; x++) {
-        const tile = this.mapData[y][x];
-        const posX = x * this.tileSize;
-        const posY = y * this.tileSize;
-        if (tile === 0) {
-          this.add.image(posX, posY, 'suelo').setOrigin(0);
-        } else if (tile === 1) {
-          const wall = this.add.image(posX, posY, 'pared').setOrigin(0);
-          this.wallLayer.add(wall);
-          wall.body.setSize(this.tileSize, this.tileSize);
+      for (let y = 0; y < this.mapHeight; y++) {
+        for (let x = 0; x < this.mapWidth; x++) {
+          const posX = x * this.tileSize;
+          const posY = y * this.tileSize;
+          if (this.mapData[y][x] === 0) {
+            this.add.image(posX, posY, 'suelo').setOrigin(0);
+          } else {
+            const wall = this.add.image(posX, posY, 'pared').setOrigin(0);
+            this.wallLayer.add(wall);
+          }
         }
       }
+
+      this.player = this.physics.add.sprite(3 * this.tileSize, 3 * this.tileSize, 'player');
+      this.player.setCollideWorldBounds(true);
+      this.physics.add.collider(this.player, this.wallLayer);
+
+      this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+      this.cameras.main.setBounds(0, 0, this.mapWidth * this.tileSize, this.mapHeight * this.tileSize);
+
+      this.createVirtualJoystick();
+    } catch (e) {
+      alert('Error en DungeonScene: ' + e.message);
     }
-
-    // Jugador
-    this.player = this.physics.add.sprite(3 * this.tileSize, 3 * this.tileSize, 'player');
-    this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, this.wallLayer);
-
-    // Cámara sigue al jugador
-    this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
-    this.cameras.main.setBounds(0, 0, this.mapWidth * this.tileSize, this.mapHeight * this.tileSize);
-
-    // Joystick virtual
-    this.createVirtualJoystick();
   }
 
   createVirtualJoystick() {
@@ -167,15 +159,23 @@ class DungeonScene extends Phaser.Scene {
 
   update() {
     const speed = 160;
-    this.player.setVelocity(
-      this.joystickVector.x * speed,
-      this.joystickVector.y * speed
-    );
-    if (!this.joystickActive) {
-      this.player.setVelocity(0, 0);
+    if (this.player && this.joystickVector) {
+      this.player.setVelocity(
+        this.joystickVector.x * speed,
+        this.joystickVector.y * speed
+      );
+      if (!this.joystickActive) {
+        this.player.setVelocity(0, 0);
+      }
     }
   }
 }
 
 // ========== INICIAR ==========
-const game = new Phaser.Game(config);
+window.addEventListener('load', () => {
+  try {
+    const game = new Phaser.Game(config);
+  } catch (e) {
+    alert('Error al iniciar Phaser: ' + e.message);
+  }
+});
