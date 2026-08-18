@@ -1,40 +1,13 @@
-// Detección de errores globales (muestra alerta)
-window.onerror = function(message, source, lineno, colno, error) {
-  alert('Error en JS: ' + message + ' (línea ' + lineno + ')');
-};
-
-const config = {
-  type: Phaser.AUTO,
-  width: 400,
-  height: 700,
-  parent: 'game-container',
-  backgroundColor: '#111',
-  physics: {
-    default: 'arcade',
-    arcade: { gravity: { y: 0 }, debug: false }
-  },
-  scale: {
-    mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH
-  },
-  scene: [BootScene, DungeonScene]
-};
-
-// ========== TEXTURAS ==========
+// ========== CLASES PRIMERO ==========
 class BootScene extends Phaser.Scene {
   constructor() { super('BootScene'); }
 
   create() {
-    try {
-      // Creamos texturas usando canvas (más compatible)
-      this.createTexture('suelo', 64, 64, '#3a3a5c');
-      this.createTexture('pared', 64, 64, '#8b4513');
-      this.createTexture('player', 32, 32, '#4dd599');
-      this.createTexture('enemy', 32, 32, '#ff5555');
-      this.scene.start('DungeonScene');
-    } catch (e) {
-      alert('Error en BootScene: ' + e.message);
-    }
+    this.createTexture('suelo', 64, 64, '#3a3a5c');
+    this.createTexture('pared', 64, 64, '#8b4513');
+    this.createTexture('player', 32, 32, '#4dd599');
+    this.createTexture('enemy', 32, 32, '#ff5555');
+    this.scene.start('DungeonScene');
   }
 
   createTexture(key, w, h, color) {
@@ -44,7 +17,6 @@ class BootScene extends Phaser.Scene {
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, w, h);
-    // Borde suave
     ctx.strokeStyle = '#00000033';
     ctx.lineWidth = 2;
     ctx.strokeRect(1, 1, w-2, h-2);
@@ -52,7 +24,6 @@ class BootScene extends Phaser.Scene {
   }
 }
 
-// ========== ESCENA DE MAZMORRA ==========
 class DungeonScene extends Phaser.Scene {
   constructor() {
     super('DungeonScene');
@@ -62,53 +33,49 @@ class DungeonScene extends Phaser.Scene {
   }
 
   create() {
-    try {
-      // Mapa simplificado (igual que antes)
-      this.mapData = [
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-      ];
+    this.mapData = [
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ];
 
-      this.groundLayer = this.add.group();
-      this.wallLayer = this.physics.add.staticGroup();
+    this.groundLayer = this.add.group();
+    this.wallLayer = this.physics.add.staticGroup();
 
-      for (let y = 0; y < this.mapHeight; y++) {
-        for (let x = 0; x < this.mapWidth; x++) {
-          const posX = x * this.tileSize;
-          const posY = y * this.tileSize;
-          if (this.mapData[y][x] === 0) {
-            this.add.image(posX, posY, 'suelo').setOrigin(0);
-          } else {
-            const wall = this.add.image(posX, posY, 'pared').setOrigin(0);
-            this.wallLayer.add(wall);
-          }
+    for (let y = 0; y < this.mapHeight; y++) {
+      for (let x = 0; x < this.mapWidth; x++) {
+        const posX = x * this.tileSize;
+        const posY = y * this.tileSize;
+        if (this.mapData[y][x] === 0) {
+          this.add.image(posX, posY, 'suelo').setOrigin(0);
+        } else {
+          const wall = this.add.image(posX, posY, 'pared').setOrigin(0);
+          this.wallLayer.add(wall);
+          wall.body.setSize(this.tileSize, this.tileSize);
         }
       }
-
-      this.player = this.physics.add.sprite(3 * this.tileSize, 3 * this.tileSize, 'player');
-      this.player.setCollideWorldBounds(true);
-      this.physics.add.collider(this.player, this.wallLayer);
-
-      this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
-      this.cameras.main.setBounds(0, 0, this.mapWidth * this.tileSize, this.mapHeight * this.tileSize);
-
-      this.createVirtualJoystick();
-    } catch (e) {
-      alert('Error en DungeonScene: ' + e.message);
     }
+
+    this.player = this.physics.add.sprite(3 * this.tileSize, 3 * this.tileSize, 'player');
+    this.player.setCollideWorldBounds(true);
+    this.physics.add.collider(this.player, this.wallLayer);
+
+    this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+    this.cameras.main.setBounds(0, 0, this.mapWidth * this.tileSize, this.mapHeight * this.tileSize);
+
+    this.createVirtualJoystick();
   }
 
   createVirtualJoystick() {
@@ -171,11 +138,24 @@ class DungeonScene extends Phaser.Scene {
   }
 }
 
-// ========== INICIAR ==========
+// ========== CONFIGURACIÓN E INICIO (DESPUÉS DE LAS CLASES) ==========
+const config = {
+  type: Phaser.AUTO,
+  width: 400,
+  height: 700,
+  parent: 'game-container',
+  backgroundColor: '#111',
+  physics: {
+    default: 'arcade',
+    arcade: { gravity: { y: 0 }, debug: false }
+  },
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
+  scene: [BootScene, DungeonScene]
+};
+
 window.addEventListener('load', () => {
-  try {
-    const game = new Phaser.Game(config);
-  } catch (e) {
-    alert('Error al iniciar Phaser: ' + e.message);
-  }
+  const game = new Phaser.Game(config);
 });
