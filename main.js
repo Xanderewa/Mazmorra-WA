@@ -7,13 +7,12 @@ const MAZMORRAS = [
     desbloqueada: true,
     mensaje: 'La Cripta de las Sombras se abre ante ti...',
     colorLetra: '#B266FF',
-    // Mapa de 20x20 (filas de strings)
-    // # = pared, . = suelo, S = esqueleto, B = murciélago, Z = zombi,
-    // T = pinchos, J = jefe (nigromante), P = posición inicial jugador
+    colorSuelo: '#3a3a5c',
+    colorPared: '#5c3a6b',
+    // Mapa 20x20
     mapa: [
       '####################',
       '#P.................#',
-      '#..................#',
       '#...S..............#',
       '#..................#',
       '#..T...............#',
@@ -30,116 +29,153 @@ const MAZMORRAS = [
       '#..................#',
       '#.............J....#',
       '#..................#',
+      '#..................#',
       '####################'
     ],
     enemigos: [
-      { tipo: 'esqueleto', cantidad: 3 },
-      { tipo: 'murcielago', cantidad: 2 },
-      { tipo: 'zombi', cantidad: 2 }
+      { tipo: 'esqueleto', x: 3, y: 3 },
+      { tipo: 'esqueleto', x: 11, y: 11 },
+      { tipo: 'murcielago', x: 5, y: 9 },
+      { tipo: 'murcielago', x: 8, y: 5 },
+      { tipo: 'zombi', x: 8, y: 7 },
+      { tipo: 'zombi', x: 9, y: 15 }
     ],
     jefes: [
-      { tipo: 'nigromante', posicion: { x: 17, y: 17 } }
+      { tipo: 'nigromante', x: 17, y: 17 }
     ],
-    recompensaJefe: { monedas: 100, llaves: 1 }
+    decoracion: ['ataud', 'antorchas']
   },
   {
     id: 'bosque',
     nombre: 'Bosque Maldito',
     dificultad: 2,
-    desbloqueada: false,
+    desbloqueada: true,
     mensaje: 'El Bosque Maldito susurra tu nombre...',
     colorLetra: '#9ACD32',
+    colorSuelo: '#1B4D1B',
+    colorPared: '#2E7D32',
     mapa: [
       '####################',
       '#P.................#',
+      '#...L..............#',
       '#..................#',
+      '#..T...............#',
       '#..................#',
+      '#........L.........#',
       '#..................#',
+      '#.....P............#',
       '#..................#',
+      '#...........L......#',
       '#..................#',
+      '#......T...........#',
       '#..................#',
+      '#.........L........#',
       '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
+      '#.............J....#',
       '#..................#',
       '#..................#',
       '####################'
     ],
-    enemigos: [],
-    jefes: [],
-    recompensaJefe: { monedas: 200, llaves: 1 }
+    enemigos: [
+      { tipo: 'lobo', x: 4, y: 4 },
+      { tipo: 'lobo', x: 8, y: 7 },
+      { tipo: 'planta', x: 9, y: 5 },
+      { tipo: 'planta', x: 5, y: 10 },
+      { tipo: 'lobo', x: 11, y: 12 },
+      { tipo: 'murcielago', x: 6, y: 14 }
+    ],
+    jefes: [
+      { tipo: 'ent', x: 17, y: 17 }
+    ],
+    decoracion: ['arboles', 'flores']
   },
   {
     id: 'cavernas',
     nombre: 'Cavernas de Hielo',
     dificultad: 3,
-    desbloqueada: false,
+    desbloqueada: true,
     mensaje: 'Las Cavernas de Hielo te hielan el alma...',
     colorLetra: '#00BFFF',
+    colorSuelo: '#1a3a4a',
+    colorPared: '#2c5e7a',
     mapa: [
       '####################',
       '#P.................#',
+      '#...G..............#',
       '#..................#',
+      '#..T...............#',
       '#..................#',
+      '#........G.........#',
       '#..................#',
+      '#.....G............#',
       '#..................#',
+      '#...........G......#',
       '#..................#',
+      '#......T...........#',
       '#..................#',
+      '#.........G........#',
       '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
+      '#.............J....#',
       '#..................#',
       '#..................#',
       '####################'
     ],
-    enemigos: [],
-    jefes: [],
-    recompensaJefe: { monedas: 300, llaves: 1 }
+    enemigos: [
+      { tipo: 'golem', x: 4, y: 4 },
+      { tipo: 'golem', x: 8, y: 7 },
+      { tipo: 'murcielago_escarcha', x: 5, y: 9 },
+      { tipo: 'murcielago_escarcha', x: 10, y: 13 },
+      { tipo: 'lobo_artico', x: 6, y: 5 },
+      { tipo: 'lobo_artico', x: 12, y: 15 }
+    ],
+    jefes: [
+      { tipo: 'yeti', x: 17, y: 17 }
+    ],
+    decoracion: ['cristales', 'nieve']
   },
   {
     id: 'lava',
     nombre: 'Lava Infernal',
     dificultad: 4,
-    desbloqueada: false,
+    desbloqueada: true,
     mensaje: 'Lava Infernal arde ante ti. Solo los más fuertes sobreviven.',
     colorLetra: '#FF4500',
+    colorSuelo: '#5a2e0a',
+    colorPared: '#8b3a0a',
     mapa: [
       '####################',
       '#P.................#',
+      '#...A..............#',
       '#..................#',
+      '#..T...............#',
       '#..................#',
+      '#........E.........#',
       '#..................#',
+      '#.....A............#',
       '#..................#',
+      '#...........E......#',
       '#..................#',
+      '#......T...........#',
       '#..................#',
+      '#.........A........#',
       '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
-      '#..................#',
+      '#.............J....#',
       '#..................#',
       '#..................#',
       '####################'
     ],
-    enemigos: [],
-    jefes: [],
-    recompensaJefe: { monedas: 500, llaves: 1 }
+    enemigos: [
+      { tipo: 'arana', x: 4, y: 4 },
+      { tipo: 'arana', x: 9, y: 9 },
+      { tipo: 'esqueleto_llameante', x: 8, y: 7 },
+      { tipo: 'esqueleto_llameante', x: 11, y: 12 },
+      { tipo: 'arana', x: 5, y: 14 },
+      { tipo: 'esqueleto_llameante', x: 13, y: 15 }
+    ],
+    jefes: [
+      { tipo: 'carnicero', x: 17, y: 17 }
+    ],
+    decoracion: ['lava', 'rocas']
   }
 ];
 
@@ -148,225 +184,370 @@ class BootScene extends Phaser.Scene {
   constructor() { super('BootScene'); }
 
   create() {
-    // Texturas de tiles
-    this.createTileTexture('suelo', 64, 64, '#3a3a5c');
-    this.createTileTexture('pared', 64, 64, '#8b4513');
-    this.createTileTexture('pincho', 64, 64, '#aaaaaa', true); // triángulos
-
-    // Personajes
+    // Texturas de tiles (se generan en DungeonScene con colores personalizados)
+    // Solo creamos texturas de personajes, enemigos y objetos
     this.createCatTexture();
     this.createSkeletonTexture();
     this.createBatTexture();
     this.createZombieTexture();
     this.createNecromancerTexture();
+    this.createWolfTexture();
+    this.createPlantTexture();
+    this.createGolemTexture();
+    this.createArachnidTexture();
+    this.createFlameSkeletonTexture();
+    this.createYetiTexture();
+    this.createEntTexture();
+    this.createCarniceroTexture();
     this.createPawTexture();
     this.createProjectileTexture();
-
-    // Moneda
     this.createCoinTexture();
+    this.createDecorations();
 
     this.scene.start('MenuScene');
   }
 
-  createTileTexture(key, w, h, color, isSpike = false) {
-    const canvas = document.createElement('canvas');
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext('2d');
-    if (isSpike) {
-      // Fondo transparente
-      ctx.clearRect(0, 0, w, h);
-      // Triángulos de pinchos (gris oscuro)
-      ctx.fillStyle = '#555555';
-      for (let i = 0; i < 4; i++) {
-        const x = i * (w / 4);
-        ctx.beginPath();
-        ctx.moveTo(x, h);
-        ctx.lineTo(x + w / 8, 0);
-        ctx.lineTo(x + w / 4, h);
-        ctx.fill();
-      }
-    } else {
-      ctx.fillStyle = color;
-      ctx.fillRect(0, 0, w, h);
-      ctx.strokeStyle = '#00000033';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(1, 1, w-2, h-2);
-    }
-    this.textures.addCanvas(key, canvas);
-  }
-
   createCatTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#111111';
+    const c = document.createElement('canvas');
+    c.width = 32; c.height = 32;
+    const ctx = c.getContext('2d');
+    // Cuerpo
+    ctx.fillStyle = '#111';
     ctx.beginPath();
-    ctx.ellipse(16, 20, 10, 8, 0, 0, Math.PI * 2);
+    ctx.ellipse(16, 20, 10, 8, 0, 0, Math.PI*2);
     ctx.fill();
     // Orejas
-    ctx.fillStyle = '#111111';
-    ctx.beginPath();
-    ctx.moveTo(8, 12); ctx.lineTo(10, 4); ctx.lineTo(14, 10); ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(24, 12); ctx.lineTo(22, 4); ctx.lineTo(18, 10); ctx.fill();
-    // Ojos
-    ctx.fillStyle = '#00ff00';
-    ctx.beginPath();
-    ctx.arc(13, 19, 1.5, 0, Math.PI*2); ctx.arc(19, 19, 1.5, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#111';
+    ctx.beginPath(); ctx.moveTo(8,12); ctx.lineTo(10,4); ctx.lineTo(14,10); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(24,12); ctx.lineTo(22,4); ctx.lineTo(18,10); ctx.fill();
+    // Ojos (verdes con brillo)
+    ctx.fillStyle = '#0f0';
+    ctx.beginPath(); ctx.arc(13,19,1.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(19,19,1.5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(13.5,18.5,0.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(19.5,18.5,0.5,0,Math.PI*2); ctx.fill();
+    // Nariz
+    ctx.fillStyle = '#ff9999';
+    ctx.beginPath(); ctx.arc(16,21,1,0,Math.PI*2); ctx.fill();
     // Cola
-    ctx.strokeStyle = '#111111';
+    ctx.strokeStyle = '#111';
     ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(26, 20); ctx.quadraticCurveTo(32, 16, 28, 10); ctx.stroke();
-    this.textures.addCanvas('cat', canvas);
+    ctx.beginPath(); ctx.moveTo(26,20); ctx.quadraticCurveTo(32,16,28,10); ctx.stroke();
+    this.textures.addCanvas('cat', c);
   }
 
   createSkeletonTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext('2d');
-    // Espada
-    ctx.fillStyle = '#8b5a2b';
-    ctx.fillRect(22, 10, 2, 10);
-    ctx.fillStyle = '#cccccc';
-    ctx.fillRect(21, 4, 4, 6);
-    // Cuerpo
-    ctx.strokeStyle = '#f0f0f0';
-    ctx.lineWidth = 3;
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Espada de madera
+    ctx.fillStyle = '#8b5a2b'; ctx.fillRect(22,10,2,10);
+    ctx.fillStyle = '#ccc'; ctx.fillRect(21,4,4,6);
+    // Cuerpo huesos
+    ctx.strokeStyle = '#f0f0f0'; ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(10, 14); ctx.lineTo(18, 18); ctx.moveTo(18, 18); ctx.lineTo(24, 14);
-    ctx.moveTo(13, 24); ctx.lineTo(11, 30); ctx.moveTo(19, 24); ctx.lineTo(21, 30);
-    ctx.moveTo(16, 16); ctx.lineTo(16, 24);
+    ctx.moveTo(10,14); ctx.lineTo(18,18); ctx.moveTo(18,18); ctx.lineTo(24,14);
+    ctx.moveTo(13,24); ctx.lineTo(11,30); ctx.moveTo(19,24); ctx.lineTo(21,30);
+    ctx.moveTo(16,16); ctx.lineTo(16,24);
     ctx.stroke();
     // Cráneo
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(16, 10, 7, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#000000';
-    ctx.beginPath();
-    ctx.arc(13.5, 9, 1.2, 0, Math.PI*2); ctx.arc(18.5, 9, 1.2, 0, Math.PI*2); ctx.fill();
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(13, 12); ctx.lineTo(19, 12); ctx.stroke();
-    this.textures.addCanvas('skeleton', canvas);
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(16,10,7,0,Math.PI*2); ctx.fill();
+    // Ojos negros
+    ctx.fillStyle = '#000';
+    ctx.beginPath(); ctx.arc(13.5,9,1.2,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(18.5,9,1.2,0,Math.PI*2); ctx.fill();
+    // Boca
+    ctx.strokeStyle = '#000'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(13,12); ctx.lineTo(19,12); ctx.stroke();
+    this.textures.addCanvas('skeleton', c);
   }
 
   createBatTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext('2d');
-    // Cuerpo (círculo gris)
-    ctx.fillStyle = '#666666';
-    ctx.beginPath();
-    ctx.arc(16, 18, 6, 0, Math.PI*2); ctx.fill();
-    // Alas (triángulos)
-    ctx.fillStyle = '#555555';
-    ctx.beginPath();
-    ctx.moveTo(8, 10); ctx.lineTo(16, 18); ctx.lineTo(4, 22); ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(24, 10); ctx.lineTo(16, 18); ctx.lineTo(28, 22); ctx.fill();
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Cuerpo
+    ctx.fillStyle = '#666'; ctx.beginPath(); ctx.arc(16,18,6,0,Math.PI*2); ctx.fill();
+    // Alas grandes
+    ctx.fillStyle = '#555';
+    ctx.beginPath(); ctx.moveTo(8,10); ctx.lineTo(16,18); ctx.lineTo(2,24); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(24,10); ctx.lineTo(16,18); ctx.lineTo(30,24); ctx.fill();
     // Ojos rojos
-    ctx.fillStyle = '#ff0000';
-    ctx.beginPath();
-    ctx.arc(14, 17, 1.5, 0, Math.PI*2); ctx.arc(18, 17, 1.5, 0, Math.PI*2); ctx.fill();
-    this.textures.addCanvas('bat', canvas);
+    ctx.fillStyle = '#f00';
+    ctx.beginPath(); ctx.arc(14,17,1.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(18,17,1.5,0,Math.PI*2); ctx.fill();
+    // Colmillos
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(14,20,1,2); ctx.fillRect(17,20,1,2);
+    this.textures.addCanvas('bat', c);
   }
 
   createZombieTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext('2d');
-    // Cuerpo verde
-    ctx.fillStyle = '#556b2f';
-    ctx.fillRect(8, 8, 16, 20);
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Cuerpo verde podrido
+    ctx.fillStyle = '#556b2f'; ctx.fillRect(8,8,16,20);
     // Cabeza
-    ctx.fillStyle = '#6b8e23';
-    ctx.beginPath();
-    ctx.arc(16, 10, 7, 0, Math.PI*2); ctx.fill();
-    // Ojos
-    ctx.fillStyle = '#ff0000';
-    ctx.beginPath();
-    ctx.arc(13, 9, 1.5, 0, Math.PI*2); ctx.arc(19, 9, 1.5, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#6b8e23'; ctx.beginPath(); ctx.arc(16,10,7,0,Math.PI*2); ctx.fill();
+    // Ojos rojos
+    ctx.fillStyle = '#f00';
+    ctx.beginPath(); ctx.arc(13,9,1.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(19,9,1.5,0,Math.PI*2); ctx.fill();
+    // Herida
+    ctx.fillStyle = '#8b0000'; ctx.fillRect(12,14,8,2);
     // Brazos extendidos
-    ctx.strokeStyle = '#556b2f';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(8, 14); ctx.lineTo(2, 18);
-    ctx.moveTo(24, 14); ctx.lineTo(30, 18);
-    ctx.stroke();
-    this.textures.addCanvas('zombie', canvas);
+    ctx.strokeStyle = '#556b2f'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(8,14); ctx.lineTo(2,18); ctx.moveTo(24,14); ctx.lineTo(30,18); ctx.stroke();
+    this.textures.addCanvas('zombie', c);
   }
 
   createNecromancerTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext('2d');
-    // Túnica morada
-    ctx.fillStyle = '#800080';
-    ctx.fillRect(8, 12, 16, 20);
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Túnica púrpura
+    ctx.fillStyle = '#800080'; ctx.fillRect(8,12,16,20);
     // Capucha
-    ctx.fillStyle = '#4b0082';
-    ctx.beginPath();
-    ctx.arc(16, 12, 8, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#4b0082'; ctx.beginPath(); ctx.arc(16,12,8,0,Math.PI*2); ctx.fill();
     // Ojos brillantes
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(13, 11, 1.5, 0, Math.PI*2); ctx.arc(19, 11, 1.5, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(13,11,1.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(19,11,1.5,0,Math.PI*2); ctx.fill();
     // Bastón
-    ctx.strokeStyle = '#8b5a2b';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#8b5a2b'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(26,18); ctx.lineTo(26,32); ctx.stroke();
+    this.textures.addCanvas('necromancer', c);
+  }
+
+  createWolfTexture() {
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Cuerpo gris
+    ctx.fillStyle = '#555'; ctx.fillRect(6,12,20,12);
+    // Cabeza
+    ctx.fillStyle = '#666'; ctx.beginPath(); ctx.arc(16,10,6,0,Math.PI*2); ctx.fill();
+    // Orejas
+    ctx.fillStyle = '#555';
+    ctx.beginPath(); ctx.moveTo(12,7); ctx.lineTo(14,2); ctx.lineTo(17,7); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(20,7); ctx.lineTo(22,2); ctx.lineTo(25,7); ctx.fill();
+    // Ojos amarillos
+    ctx.fillStyle = '#ff0';
+    ctx.beginPath(); ctx.arc(14,9,1.2,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(18,9,1.2,0,Math.PI*2); ctx.fill();
+    // Cola
+    ctx.strokeStyle = '#555'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(26,16); ctx.quadraticCurveTo(30,10,28,6); ctx.stroke();
+    this.textures.addCanvas('wolf', c);
+  }
+
+  createPlantTexture() {
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Maceta
+    ctx.fillStyle = '#8b5a2b'; ctx.fillRect(10,24,12,8);
+    // Tallo
+    ctx.strokeStyle = '#0f0'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(16,24); ctx.lineTo(16,12); ctx.stroke();
+    // Hojas
+    ctx.fillStyle = '#0a0';
+    ctx.fillRect(14,14,4,8); ctx.fillRect(18,14,4,8);
+    // Cabeza de planta (boca)
+    ctx.fillStyle = '#0f0'; ctx.beginPath(); ctx.arc(16,10,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#f00'; ctx.beginPath(); ctx.arc(16,10,3,0,Math.PI*2); ctx.fill();
+    // Dientes
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(14,10,1,2); ctx.fillRect(17,10,1,2);
+    this.textures.addCanvas('plant', c);
+  }
+
+  createGolemTexture() {
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Cuerpo de piedra
+    ctx.fillStyle = '#789'; ctx.fillRect(8,8,16,16);
+    // Cabeza
+    ctx.fillStyle = '#89a'; ctx.beginPath(); ctx.arc(16,8,6,0,Math.PI*2); ctx.fill();
+    // Ojos azules
+    ctx.fillStyle = '#00f';
+    ctx.beginPath(); ctx.arc(14,7,1.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(18,7,1.5,0,Math.PI*2); ctx.fill();
+    // Grietas
+    ctx.strokeStyle = '#333'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(12,14); ctx.lineTo(16,18); ctx.lineTo(20,14); ctx.stroke();
+    this.textures.addCanvas('golem', c);
+  }
+
+  createArachnidTexture() {
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Cuerpo (dos círculos)
+    ctx.fillStyle = '#300'; ctx.fillRect(8,8,16,12);
+    // Cabeza
+    ctx.fillStyle = '#400'; ctx.beginPath(); ctx.arc(16,10,5,0,Math.PI*2); ctx.fill();
+    // Ojos múltiples
+    ctx.fillStyle = '#f00';
+    for (let i=0;i<4;i++) {
+      ctx.beginPath(); ctx.arc(13+i*3,9,1,0,Math.PI*2); ctx.fill();
+    }
+    // Patas
+    ctx.strokeStyle = '#300'; ctx.lineWidth=2;
+    for (let i=0;i<4;i++) {
+      ctx.beginPath();
+      ctx.moveTo(12+i*4,14);
+      ctx.lineTo(8+i*5,22);
+      ctx.moveTo(12+i*4,14);
+      ctx.lineTo(16+i*5,22);
+      ctx.stroke();
+    }
+    this.textures.addCanvas('arana', c);
+  }
+
+  createFlameSkeletonTexture() {
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Esqueleto básico
+    this.createSkeletonTexture(); // reutilizar? no se puede, pero dibujamos similar
+    // Cuerpo huesos con tinte naranja
+    ctx.strokeStyle = '#ff8c00'; ctx.lineWidth=3;
     ctx.beginPath();
-    ctx.moveTo(26, 18); ctx.lineTo(26, 32); ctx.stroke();
-    this.textures.addCanvas('necromancer', canvas);
+    ctx.moveTo(10,14); ctx.lineTo(18,18); ctx.moveTo(18,18); ctx.lineTo(24,14);
+    ctx.moveTo(13,24); ctx.lineTo(11,30); ctx.moveTo(19,24); ctx.lineTo(21,30);
+    ctx.moveTo(16,16); ctx.lineTo(16,24);
+    ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(16,10,7,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#f00';
+    ctx.beginPath(); ctx.arc(13.5,9,1.2,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(18.5,9,1.2,0,Math.PI*2); ctx.fill();
+    // Fuego alrededor
+    ctx.fillStyle = '#ff4500';
+    ctx.beginPath(); ctx.arc(16,12,8,0,Math.PI*2); ctx.fill();
+    this.textures.addCanvas('esqueleto_llameante', c);
+  }
+
+  createYetiTexture() {
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Cuerpo blanco peludo
+    ctx.fillStyle = '#eee'; ctx.fillRect(6,12,20,20);
+    // Cabeza
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(16,10,7,0,Math.PI*2); ctx.fill();
+    // Ojos azules
+    ctx.fillStyle = '#00f';
+    ctx.beginPath(); ctx.arc(14,9,1.2,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(18,9,1.2,0,Math.PI*2); ctx.fill();
+    // Dientes
+    ctx.fillStyle = '#fff'; ctx.fillRect(14,13,2,3); ctx.fillRect(17,13,2,3);
+    this.textures.addCanvas('yeti', c);
+  }
+
+  createEntTexture() {
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Tronco
+    ctx.fillStyle = '#5a3e1b'; ctx.fillRect(8,8,16,20);
+    // Ramas
+    ctx.strokeStyle = '#3e2a10'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(8,16); ctx.lineTo(2,10); ctx.moveTo(24,16); ctx.lineTo(30,10); ctx.stroke();
+    // Hojas
+    ctx.fillStyle = '#0a0';
+    ctx.beginPath(); ctx.arc(2,10,4,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(30,10,4,0,Math.PI*2); ctx.fill();
+    // Ojos
+    ctx.fillStyle = '#ff0';
+    ctx.beginPath(); ctx.arc(14,10,1.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(18,10,1.5,0,Math.PI*2); ctx.fill();
+    this.textures.addCanvas('ent', c);
+  }
+
+  createCarniceroTexture() {
+    const c = document.createElement('canvas'); c.width=32; c.height=32;
+    const ctx = c.getContext('2d');
+    // Cuerpo grande
+    ctx.fillStyle = '#8b0000'; ctx.fillRect(4,8,24,20);
+    // Cabeza con cuernos
+    ctx.fillStyle = '#a52a2a'; ctx.beginPath(); ctx.arc(16,8,8,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#ff0';
+    ctx.beginPath(); ctx.arc(14,7,1.2,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(18,7,1.2,0,Math.PI*2); ctx.fill();
+    // Cuernos
+    ctx.strokeStyle = '#fff'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(10,5); ctx.lineTo(6,0); ctx.moveTo(22,5); ctx.lineTo(26,0); ctx.stroke();
+    // Cuchillo
+    ctx.fillStyle = '#c0c0c0'; ctx.fillRect(24,12,2,6); ctx.fillStyle = '#fff'; ctx.fillRect(23,10,4,2);
+    this.textures.addCanvas('carnicero', c);
   }
 
   createPawTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 24;
-    canvas.height = 24;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.ellipse(12, 14, 7, 5, 0, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(8, 9, 2.5, 0, Math.PI*2); ctx.arc(12, 6, 2.5, 0, Math.PI*2); ctx.arc(16, 9, 2.5, 0, Math.PI*2); ctx.fill();
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    this.textures.addCanvas('paw', canvas);
+    const c = document.createElement('canvas'); c.width=24; c.height=24;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.ellipse(12,14,7,5,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(8,9,2.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(12,6,2.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(16,9,2.5,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle = '#000'; ctx.lineWidth=1; ctx.stroke();
+    this.textures.addCanvas('paw', c);
   }
 
   createProjectileTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 8;
-    canvas.height = 8;
-    const ctx = canvas.getContext('2d');
+    const c = document.createElement('canvas'); c.width=8; c.height=8;
+    const ctx = c.getContext('2d');
     ctx.fillStyle = '#aa00ff';
-    ctx.beginPath();
-    ctx.arc(4, 4, 4, 0, Math.PI*2); ctx.fill();
-    this.textures.addCanvas('projectile', canvas);
+    ctx.beginPath(); ctx.arc(4,4,4,0,Math.PI*2); ctx.fill();
+    this.textures.addCanvas('projectile', c);
   }
 
   createCoinTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 12;
-    canvas.height = 12;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#ffd700';
-    ctx.beginPath();
-    ctx.arc(6, 6, 6, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#b8860b';
-    ctx.beginPath();
-    ctx.arc(6, 6, 3, 0, Math.PI*2); ctx.fill();
-    this.textures.addCanvas('coin', canvas);
+    const c = document.createElement('canvas'); c.width=12; c.height=12;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#ffd700'; ctx.beginPath(); ctx.arc(6,6,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#b8860b'; ctx.beginPath(); ctx.arc(6,6,3,0,Math.PI*2); ctx.fill();
+    this.textures.addCanvas('coin', c);
+  }
+
+  createDecorations() {
+    // Ataúd
+    const c1 = document.createElement('canvas'); c1.width=32; c1.height=32;
+    const ctx1 = c1.getContext('2d');
+    ctx1.fillStyle = '#5c3a1b'; ctx1.fillRect(4,8,24,20);
+    ctx1.fillStyle = '#3e2a10'; ctx1.fillRect(8,12,16,12);
+    ctx1.strokeStyle = '#fff'; ctx1.lineWidth=1;
+    ctx1.strokeRect(8,12,16,12);
+    this.textures.addCanvas('ataud', c1);
+
+    // Antorcha
+    const c2 = document.createElement('canvas'); c2.width=16; c2.height=32;
+    const ctx2 = c2.getContext('2d');
+    ctx2.fillStyle = '#8b5a2b'; ctx2.fillRect(6,16,4,16);
+    ctx2.fillStyle = '#ff4500'; ctx2.beginPath(); ctx2.arc(8,10,5,0,Math.PI*2); ctx2.fill();
+    ctx2.fillStyle = '#ffd700'; ctx2.beginPath(); ctx2.arc(8,10,3,0,Math.PI*2); ctx2.fill();
+    this.textures.addCanvas('antorcha', c2);
+
+    // Árbol
+    const c3 = document.createElement('canvas'); c3.width=32; c3.height=32;
+    const ctx3 = c3.getContext('2d');
+    ctx3.fillStyle = '#5a3e1b'; ctx3.fillRect(12,16,8,16);
+    ctx3.fillStyle = '#0a0'; ctx3.beginPath(); ctx3.arc(16,10,10,0,Math.PI*2); ctx3.fill();
+    this.textures.addCanvas('arbol', c3);
+
+    // Flor
+    const c4 = document.createElement('canvas'); c4.width=16; c4.height=16;
+    const ctx4 = c4.getContext('2d');
+    ctx4.fillStyle = '#f0f'; ctx4.beginPath(); ctx4.arc(8,8,5,0,Math.PI*2); ctx4.fill();
+    ctx4.fillStyle = '#ff0'; ctx4.beginPath(); ctx4.arc(8,8,2,0,Math.PI*2); ctx4.fill();
+    this.textures.addCanvas('flor', c4);
+
+    // Cristal hielo
+    const c5 = document.createElement('canvas'); c5.width=16; c5.height=16;
+    const ctx5 = c5.getContext('2d');
+    ctx5.fillStyle = '#00bfff'; ctx5.beginPath(); ctx5.moveTo(8,0); ctx5.lineTo(16,8); ctx5.lineTo(8,16); ctx5.lineTo(0,8); ctx5.fill();
+    ctx5.strokeStyle = '#fff'; ctx5.lineWidth=1; ctx5.stroke();
+    this.textures.addCanvas('cristal', c5);
+
+    // Roca volcánica
+    const c6 = document.createElement('canvas'); c6.width=16; c6.height=16;
+    const ctx6 = c6.getContext('2d');
+    ctx6.fillStyle = '#555'; ctx6.beginPath(); ctx6.ellipse(8,8,6,5,0,0,Math.PI*2); ctx6.fill();
+    ctx6.strokeStyle = '#222'; ctx6.lineWidth=1; ctx6.stroke();
+    this.textures.addCanvas('roca', c6);
   }
 }
 
@@ -377,47 +558,49 @@ class MenuScene extends Phaser.Scene {
   create() {
     this.cameras.main.setBackgroundColor('#1a1a2e');
 
+    // Fondo decorativo con gradiente simple
+    const bg = this.add.graphics();
+    bg.fillGradientStyle(0x1a1a2e, 0x1a1a2e, 0x2a2a4e, 0x2a2a4e, 1);
+    bg.fillRect(0,0,400,700);
+    bg.setDepth(0);
+
     // Título
-    this.add.text(200, 80, 'Mazmorras 2D', { fontSize: '32px', color: '#ffffff' }).setOrigin(0.5);
+    this.add.text(200, 60, '⚔️ Mazmorras 2D ⚔️', { fontSize: '32px', color: '#ffd700' }).setOrigin(0.5);
 
     // Monedas y llaves
     const monedas = parseInt(localStorage.getItem('monedas') || '0');
     const llaves = parseInt(localStorage.getItem('llaves') || '0');
-    this.add.text(200, 130, `🪙 ${monedas}   🔑 ${llaves}`, { fontSize: '20px', color: '#ffd700' }).setOrigin(0.5);
+    this.add.text(200, 110, `🪙 ${monedas}    🔑 ${llaves}`, { fontSize: '20px', color: '#fff' }).setOrigin(0.5);
 
-    // Botones de mazmorras
+    // Botones de mazmorras (todas desbloqueadas)
+    const colores = ['#6a4e9e', '#2e7d32', '#1a6e9e', '#b23a1a'];
     MAZMORRAS.forEach((mazmorra, index) => {
-      const y = 220 + index * 80;
-      const btn = this.add.rectangle(200, y, 300, 60, mazmorra.desbloqueada ? 0x3777ca : 0x444444)
+      const y = 180 + index * 90;
+      const btn = this.add.rectangle(200, y, 320, 70, colores[index])
         .setInteractive({ useHandCursor: true });
+      btn.setStrokeStyle(2, 0xffffff, 0.5);
 
-      this.add.text(200, y, `${mazmorra.desbloqueada ? '' : '🔒 '}${mazmorra.nombre}`, {
-        fontSize: '18px',
-        color: '#ffffff',
-        align: 'center'
-      }).setOrigin(0.5);
+      this.add.text(200, y - 15, mazmorra.nombre, { fontSize: '18px', color: '#fff' }).setOrigin(0.5);
+      this.add.text(200, y + 15, `Dificultad: ${'⭐'.repeat(mazmorra.dificultad)}`, { fontSize: '14px', color: '#ffd700' }).setOrigin(0.5);
 
-      if (mazmorra.desbloqueada) {
-        btn.on('pointerdown', () => {
-          this.scene.start('DungeonScene', { mazmorraIndex: index });
-        });
-      } else {
-        btn.on('pointerdown', () => {
-          // Mostrar mensaje de bloqueada
-          this.add.text(200, y + 40, 'Completa la mazmorra anterior', {
-            fontSize: '14px',
-            color: '#ff5555'
-          }).setOrigin(0.5).setDepth(1);
-        });
-      }
+      btn.on('pointerdown', () => {
+        this.scene.start('DungeonScene', { mazmorraIndex: index });
+      });
     });
 
     // Instrucciones
-    this.add.text(200, 560, 'Usa el joystick para moverte\nBotón ⚔️ para atacar', {
-      fontSize: '14px',
-      color: '#cccccc',
-      align: 'center'
+    this.add.text(200, 560, '🕹️ Joystick para moverte\n⚔️ Botón rojo para atacar', {
+      fontSize: '14px', color: '#ccc', align: 'center'
     }).setOrigin(0.5);
+
+    // Botón para resetear progreso (opcional)
+    const resetBtn = this.add.rectangle(200, 640, 160, 40, 0x333333)
+      .setInteractive({ useHandCursor: true });
+    this.add.text(200, 640, 'Resetear', { fontSize: '16px', color: '#fff' }).setOrigin(0.5);
+    resetBtn.on('pointerdown', () => {
+      localStorage.clear();
+      this.scene.restart();
+    });
   }
 }
 
@@ -451,11 +634,17 @@ class DungeonScene extends Phaser.Scene {
   create() {
     const mazmorra = this.currentMazmorra;
 
-    // Mostrar mensaje de entrada (temporal)
+    // Generar texturas de suelo y pared con colores de la mazmorra
+    this.createTileTexture('suelo_maz', 64, 64, mazmorra.colorSuelo);
+    this.createTileTexture('pared_maz', 64, 64, mazmorra.colorPared);
+
+    // Mostrar mensaje de entrada
     this.mensajeEntrada = this.add.text(200, 350, mazmorra.mensaje, {
       fontSize: '20px',
       color: mazmorra.colorLetra,
-      align: 'center'
+      align: 'center',
+      backgroundColor: '#000000aa',
+      padding: { x: 10, y: 5 }
     }).setOrigin(0.5).setScrollFactor(0).setDepth(100);
     this.time.delayedCall(2500, () => this.mensajeEntrada.destroy());
 
@@ -474,39 +663,55 @@ class DungeonScene extends Phaser.Scene {
         const posY = y * this.tileSize;
         const char = mapa[y][x];
         if (char === '#') {
-          const wall = this.add.image(posX, posY, 'pared').setOrigin(0);
+          const wall = this.add.image(posX, posY, 'pared_maz').setOrigin(0);
           this.wallLayer.add(wall);
           wall.body.setSize(this.tileSize, this.tileSize);
         } else if (char === '.') {
-          this.add.image(posX, posY, 'suelo').setOrigin(0);
+          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
         } else if (char === 'P') {
-          this.add.image(posX, posY, 'suelo').setOrigin(0);
+          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
           this.player = this.physics.add.sprite(posX, posY, 'cat');
           this.player.setCollideWorldBounds(true);
           this.playerHP = 100;
           this.physics.add.collider(this.player, this.wallLayer);
         } else if (char === 'S') {
-          this.add.image(posX, posY, 'suelo').setOrigin(0);
+          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
           this.spawnEnemy('esqueleto', posX, posY);
         } else if (char === 'B') {
-          this.add.image(posX, posY, 'suelo').setOrigin(0);
+          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
           this.spawnEnemy('murcielago', posX, posY);
         } else if (char === 'Z') {
-          this.add.image(posX, posY, 'suelo').setOrigin(0);
+          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
           this.spawnEnemy('zombi', posX, posY);
         } else if (char === 'T') {
-          this.add.image(posX, posY, 'suelo').setOrigin(0);
+          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
           const spike = this.add.image(posX, posY, 'pincho').setOrigin(0);
           this.spikeGroup.add(spike);
           spike.body.setSize(this.tileSize, this.tileSize);
         } else if (char === 'J') {
-          this.add.image(posX, posY, 'suelo').setOrigin(0);
-          this.spawnEnemy('nigromante', posX, posY, true); // es jefe
+          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          // Encontrar jefe correspondiente en mazmorra.jefes y usar su tipo
+          const jefeDef = mazmorra.jefes.find(j => j.x === x && j.y === y);
+          if (jefeDef) {
+            this.spawnEnemy(jefeDef.tipo, posX, posY, true);
+          }
+        } else if (char === 'L') { // Lobo (solo Bosque)
+          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          this.spawnEnemy('lobo', posX, posY);
+        } else if (char === 'G') { // Golem (Cavernas)
+          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          this.spawnEnemy('golem', posX, posY);
+        } else if (char === 'A') { // Araña (Lava)
+          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          this.spawnEnemy('arana', posX, posY);
+        } else if (char === 'E') { // Esqueleto llameante (Lava)
+          this.add.image(posX, posY, 'suelo_maz').setOrigin(0);
+          this.spawnEnemy('esqueleto_llameante', posX, posY);
         }
       }
     }
 
-    // Si no se definió jugador (por seguridad), crear en posición por defecto
+    // Si no se definió jugador, crear por defecto
     if (!this.player) {
       this.player = this.physics.add.sprite(3 * this.tileSize, 3 * this.tileSize, 'cat');
       this.player.setCollideWorldBounds(true);
@@ -532,48 +737,70 @@ class DungeonScene extends Phaser.Scene {
     this.createAttackButton();
   }
 
+  createTileTexture(key, w, h, color) {
+    if (this.textures.exists(key)) this.textures.remove(key);
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, w, h);
+    // Añadir textura de detalle (líneas)
+    ctx.strokeStyle = '#00000033';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(1, 1, w-2, h-2);
+    // Sombreado suave
+    ctx.fillStyle = '#ffffff11';
+    ctx.fillRect(0, 0, w, h/2);
+    this.textures.addCanvas(key, canvas);
+  }
+
   spawnEnemy(tipo, x, y, esJefe = false) {
     let sprite;
     let health, speed, damage, rangeDetect;
     switch (tipo) {
       case 'esqueleto':
         sprite = this.enemies.create(x, y, 'skeleton');
-        health = 40;
-        speed = 60;
-        damage = 3;
-        rangeDetect = 300;
-        break;
+        health = 40; speed = 60; damage = 3; rangeDetect = 300; break;
       case 'murcielago':
         sprite = this.enemies.create(x, y, 'bat');
-        health = 20;
-        speed = 100;
-        damage = 5;
-        rangeDetect = 250;
-        break;
+        health = 20; speed = 100; damage = 5; rangeDetect = 250; break;
       case 'zombi':
         sprite = this.enemies.create(x, y, 'zombie');
-        health = 60;
-        speed = 40;
-        damage = 8;
-        rangeDetect = 200;
-        break;
+        health = 60; speed = 40; damage = 8; rangeDetect = 200; break;
       case 'nigromante':
-        if (esJefe) {
-          sprite = this.jefes.create(x, y, 'necromancer');
-        } else {
-          sprite = this.enemies.create(x, y, 'necromancer');
-        }
-        health = 150;
-        speed = 50;
-        damage = 10;
-        rangeDetect = 400;
-        break;
+        if (esJefe) sprite = this.jefes.create(x, y, 'necromancer');
+        else sprite = this.enemies.create(x, y, 'necromancer');
+        health = 150; speed = 50; damage = 10; rangeDetect = 400; break;
+      case 'lobo':
+        sprite = this.enemies.create(x, y, 'wolf');
+        health = 35; speed = 90; damage = 6; rangeDetect = 350; break;
+      case 'planta':
+        sprite = this.enemies.create(x, y, 'plant');
+        health = 50; speed = 0; damage = 10; rangeDetect = 100; break;
+      case 'golem':
+        sprite = this.enemies.create(x, y, 'golem');
+        health = 80; speed = 30; damage = 12; rangeDetect = 250; break;
+      case 'arana':
+        sprite = this.enemies.create(x, y, 'arana');
+        health = 25; speed = 120; damage = 4; rangeDetect = 350; break;
+      case 'esqueleto_llameante':
+        sprite = this.enemies.create(x, y, 'esqueleto_llameante');
+        health = 70; speed = 55; damage = 10; rangeDetect = 300; break;
+      case 'yeti':
+        if (esJefe) sprite = this.jefes.create(x, y, 'yeti');
+        else sprite = this.enemies.create(x, y, 'yeti');
+        health = 400; speed = 40; damage = 20; rangeDetect = 400; break;
+      case 'ent':
+        if (esJefe) sprite = this.jefes.create(x, y, 'ent');
+        else sprite = this.enemies.create(x, y, 'ent');
+        health = 400; speed = 30; damage = 18; rangeDetect = 350; break;
+      case 'carnicero':
+        if (esJefe) sprite = this.jefes.create(x, y, 'carnicero');
+        else sprite = this.enemies.create(x, y, 'carnicero');
+        health = 600; speed = 60; damage = 25; rangeDetect = 450; break;
       default:
         sprite = this.enemies.create(x, y, 'skeleton');
-        health = 40;
-        speed = 60;
-        damage = 3;
-        rangeDetect = 300;
+        health = 40; speed = 60; damage = 3; rangeDetect = 300;
     }
 
     sprite.setCollideWorldBounds(true);
@@ -598,7 +825,17 @@ class DungeonScene extends Phaser.Scene {
     const y = enemy.y - 20;
     enemy.healthBar.fillStyle(0x000000, 0.8);
     enemy.healthBar.fillRect(x, y, width, height);
-    const maxHealth = enemy.tipo === 'nigromante' ? 150 : enemy.tipo === 'zombi' ? 60 : enemy.tipo === 'murcielago' ? 20 : 40;
+    const maxHealth = enemy.tipo === 'nigromante' ? 150 :
+                      enemy.tipo === 'yeti' ? 400 :
+                      enemy.tipo === 'ent' ? 400 :
+                      enemy.tipo === 'carnicero' ? 600 :
+                      enemy.tipo === 'esqueleto_llameante' ? 70 :
+                      enemy.tipo === 'golem' ? 80 :
+                      enemy.tipo === 'planta' ? 50 :
+                      enemy.tipo === 'lobo' ? 35 :
+                      enemy.tipo === 'murcielago' ? 20 :
+                      enemy.tipo === 'zombi' ? 60 :
+                      enemy.tipo === 'arana' ? 25 : 40;
     const healthPercent = Phaser.Math.Clamp(enemy.health / maxHealth, 0, 1);
     enemy.healthBar.fillStyle(0xff0000, 1);
     enemy.healthBar.fillRect(x, y, width * healthPercent, height);
@@ -607,6 +844,11 @@ class DungeonScene extends Phaser.Scene {
   createHUD() {
     this.playerHealthBar = this.add.graphics().setScrollFactor(0).setDepth(20);
     this.updatePlayerHealthBar();
+
+    // Texto de monedas
+    this.moneyText = this.add.text(10, 30, `🪙 ${localStorage.getItem('monedas') || 0}`, {
+      fontSize: '16px', color: '#ffd700'
+    }).setScrollFactor(0).setDepth(20);
   }
 
   updatePlayerHealthBar() {
@@ -688,15 +930,13 @@ class DungeonScene extends Phaser.Scene {
   dropCoins(x, y) {
     const coin = this.coinsGroup.create(x, y, 'coin');
     coin.setDepth(3);
-    // Moneda desaparece tras 3 segundos si no se recoge
     this.time.delayedCall(3000, () => {
       if (coin.active) coin.destroy();
     });
   }
 
   derrotarJefe(jefe) {
-    // Recompensas
-    const recompensa = this.currentMazmorra.recompensaJefe;
+    const recompensa = this.currentMazmorra.recompensaJefe || { monedas: 100, llaves: 1 };
     let monedas = parseInt(localStorage.getItem('monedas') || '0');
     monedas += recompensa.monedas;
     localStorage.setItem('monedas', monedas.toString());
@@ -705,17 +945,11 @@ class DungeonScene extends Phaser.Scene {
     llaves += recompensa.llaves;
     localStorage.setItem('llaves', llaves.toString());
 
-    // Marcar mazmorra completada y desbloquear siguiente
-    const idx = MAZMORRAS.indexOf(this.currentMazmorra);
+    // Marcar completada
     const completadas = JSON.parse(localStorage.getItem('mazmorrasCompletadas') || '[]');
     if (!completadas.includes(this.currentMazmorra.id)) {
       completadas.push(this.currentMazmorra.id);
       localStorage.setItem('mazmorrasCompletadas', JSON.stringify(completadas));
-    }
-    if (idx + 1 < MAZMORRAS.length) {
-      MAZMORRAS[idx + 1].desbloqueada = true;
-      // Guardar desbloqueo en localStorage (simple)
-      localStorage.setItem('mazmorraDesbloqueada', MAZMORRAS[idx + 1].id);
     }
 
     jefe.destroy();
@@ -725,7 +959,9 @@ class DungeonScene extends Phaser.Scene {
     this.add.text(200, 350, '¡VICTORIA!\nHas derrotado al jefe', {
       fontSize: '28px',
       color: '#ffd700',
-      align: 'center'
+      align: 'center',
+      backgroundColor: '#000000aa',
+      padding: { x: 10, y: 5 }
     }).setOrigin(0.5).setScrollFactor(0).setDepth(30);
 
     this.add.text(200, 420, `Recompensas: ${recompensa.monedas} monedas, ${recompensa.llaves} llave(s)`, {
@@ -833,15 +1069,16 @@ class DungeonScene extends Phaser.Scene {
       if (coin.active) {
         coin.destroy();
         let monedas = parseInt(localStorage.getItem('monedas') || '0');
-        monedas += 5; // cantidad fija por moneda
+        monedas += 5;
         localStorage.setItem('monedas', monedas.toString());
+        this.moneyText.setText(`🪙 ${monedas}`);
       }
     });
 
     // Movimiento de enemigos normales
     this.enemies.children.iterate((enemy) => {
       if (!enemy.active) return;
-      this.handleEnemyAI(enemy);
+      this.handleEnemyAI(enemy, false);
     });
 
     // Movimiento de jefes
@@ -850,24 +1087,20 @@ class DungeonScene extends Phaser.Scene {
       this.handleEnemyAI(jefe, true);
     });
 
-    // Actualizar barras de vida de enemigos
+    // Actualizar barras de vida
     this.enemies.children.iterate((enemy) => {
-      if (!enemy.active) return;
-      enemy.healthBar.setPosition(enemy.x - 15, enemy.y - 20);
+      if (enemy.active) enemy.healthBar.setPosition(enemy.x - 15, enemy.y - 20);
     });
     this.jefes.children.iterate((jefe) => {
-      if (!jefe.active) return;
-      jefe.healthBar.setPosition(jefe.x - 15, jefe.y - 20);
+      if (jefe.active) jefe.healthBar.setPosition(jefe.x - 15, jefe.y - 20);
     });
 
-    // Proyectiles de jefes
+    // Proyectiles
     this.projectiles.children.iterate((proj) => {
       if (!proj.active) return;
-      // Mover en línea recta (dirección guardada)
       proj.x += proj.vx;
       proj.y += proj.vy;
 
-      // Colisión con jugador
       if (!this.invulnerable && Phaser.Geom.Intersects.RectangleToRectangle(
         this.player.getBounds(),
         proj.getBounds()
@@ -890,7 +1123,6 @@ class DungeonScene extends Phaser.Scene {
         proj.destroy();
       }
 
-      // Si sale del mapa, destruir
       if (proj.x < 0 || proj.x > this.cameras.main.worldView.right || proj.y < 0 || proj.y > this.cameras.main.worldView.bottom) {
         proj.destroy();
       }
@@ -898,25 +1130,44 @@ class DungeonScene extends Phaser.Scene {
   }
 
   handleEnemyAI(enemy, esJefe = false) {
-    // Persecución simple
     const dx = this.player.x - enemy.x;
     const dy = this.player.y - enemy.y;
     const dist = Math.sqrt(dx*dx + dy*dy);
 
     if (dist > 0 && dist < enemy.rangeDetect) {
-      // Movimiento hacia el jugador
       let vx = (dx / dist) * enemy.speed;
       let vy = (dy / dist) * enemy.speed;
 
-      // Si es murciélago, movimiento errático
-      if (enemy.tipo === 'murcielago') {
+      if (enemy.tipo === 'murcielago' || enemy.tipo === 'murcielago_escarcha') {
         vx += Math.sin(this.time.now / 500) * 30;
         vy += Math.cos(this.time.now / 500) * 30;
       }
 
-      enemy.setVelocity(vx, vy);
+      if (enemy.tipo === 'planta') {
+        // No se mueve, solo ataca si está muy cerca
+        vx = 0; vy = 0;
+        if (dist < 50 && !this.invulnerable) {
+          this.playerHP -= enemy.damage;
+          this.updatePlayerHealthBar();
+          this.invulnerable = true;
+          this.time.delayedCall(this.invulnerableDuration, () => {
+            this.invulnerable = false;
+          });
+          this.tweens.add({
+            targets: this.player,
+            alpha: 0.5,
+            duration: 100,
+            yoyo: true,
+            repeat: 5,
+            onComplete: () => { this.player.alpha = 1; }
+          });
+          if (this.playerHP <= 0) this.playerDeath();
+        }
+      } else {
+        enemy.setVelocity(vx, vy);
+      }
 
-      // Colisión con el jugador (daño)
+      // Colisión con jugador (daño cuerpo a cuerpo)
       if (!this.invulnerable && Phaser.Geom.Intersects.RectangleToRectangle(
         this.player.getBounds(),
         enemy.getBounds()
@@ -938,17 +1189,16 @@ class DungeonScene extends Phaser.Scene {
         if (this.playerHP <= 0) this.playerDeath();
       }
 
-      // Ataque a distancia si es nigromante
-      if (enemy.tipo === 'nigromante' && esJefe) {
-        this.nigromanteAttack(enemy);
+      // Ataque a distancia para jefes nigromante, ent, carnicero, yeti, etc.
+      if (esJefe && (enemy.tipo === 'nigromante' || enemy.tipo === 'ent' || enemy.tipo === 'carnicero' || enemy.tipo === 'yeti')) {
+        this.jefeRangedAttack(enemy);
       }
     } else {
-      enemy.setVelocity(0, 0);
+      if (enemy.tipo !== 'planta') enemy.setVelocity(0, 0);
     }
   }
 
-  nigromanteAttack(jefe) {
-    // Disparar proyectil cada 2 segundos
+  jefeRangedAttack(jefe) {
     if (!jefe.lastShot || this.time.now - jefe.lastShot > 2000) {
       jefe.lastShot = this.time.now;
       const dx = this.player.x - jefe.x;
