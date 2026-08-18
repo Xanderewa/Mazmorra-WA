@@ -3,15 +3,19 @@ class BootScene extends Phaser.Scene {
   constructor() { super('BootScene'); }
 
   create() {
-    this.createTexture('suelo', 64, 64, '#3a3a5c');
-    this.createTexture('pared', 64, 64, '#8b4513');
-    this.createTexture('player', 32, 32, '#4dd599');
-    this.createTexture('enemy', 32, 32, '#ff5555');
-    this.createTexture('attack_slash', 40, 40, '#ffffff'); // efecto de ataque
+    // Texturas del suelo y paredes
+    this.createTileTexture('suelo', 64, 64, '#3a3a5c');
+    this.createTileTexture('pared', 64, 64, '#8b4513');
+
+    // Texturas de personajes y ataque
+    this.createCatTexture();
+    this.createSkeletonTexture();
+    this.createPawTexture();
+
     this.scene.start('DungeonScene');
   }
 
-  createTexture(key, w, h, color) {
+  createTileTexture(key, w, h, color) {
     const canvas = document.createElement('canvas');
     canvas.width = w;
     canvas.height = h;
@@ -23,6 +27,140 @@ class BootScene extends Phaser.Scene {
     ctx.strokeRect(1, 1, w-2, h-2);
     this.textures.addCanvas(key, canvas);
   }
+
+  createCatTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d');
+
+    // Cuerpo (círculo negro)
+    ctx.fillStyle = '#111111';
+    ctx.beginPath();
+    ctx.ellipse(16, 20, 10, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Orejas (triángulos)
+    ctx.fillStyle = '#111111';
+    ctx.beginPath();
+    ctx.moveTo(8, 12);
+    ctx.lineTo(10, 4);
+    ctx.lineTo(14, 10);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(24, 12);
+    ctx.lineTo(22, 4);
+    ctx.lineTo(18, 10);
+    ctx.fill();
+
+    // Ojos (verdes)
+    ctx.fillStyle = '#00ff00';
+    ctx.beginPath();
+    ctx.arc(13, 19, 1.5, 0, Math.PI*2);
+    ctx.arc(19, 19, 1.5, 0, Math.PI*2);
+    ctx.fill();
+
+    // Cola (línea negra)
+    ctx.strokeStyle = '#111111';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(26, 20);
+    ctx.quadraticCurveTo(32, 16, 28, 10);
+    ctx.stroke();
+
+    this.textures.addCanvas('cat', canvas);
+  }
+
+  createSkeletonTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d');
+
+    // Espada de madera (mango marrón, hoja gris)
+    ctx.fillStyle = '#8b5a2b';
+    ctx.fillRect(22, 10, 2, 10);   // mango
+    ctx.fillStyle = '#cccccc';
+    ctx.fillRect(21, 4, 4, 6);     // hoja
+
+    // Cuerpo (huesos blancos)
+    ctx.strokeStyle = '#f0f0f0';
+    ctx.lineWidth = 3;
+
+    // Brazos
+    ctx.beginPath();
+    ctx.moveTo(10, 14);
+    ctx.lineTo(18, 18);
+    ctx.moveTo(18, 18);
+    ctx.lineTo(24, 14);
+    ctx.stroke();
+
+    // Piernas
+    ctx.beginPath();
+    ctx.moveTo(13, 24);
+    ctx.lineTo(11, 30);
+    ctx.moveTo(19, 24);
+    ctx.lineTo(21, 30);
+    ctx.stroke();
+
+    // Columna vertebral
+    ctx.beginPath();
+    ctx.moveTo(16, 16);
+    ctx.lineTo(16, 24);
+    ctx.stroke();
+
+    // Cráneo (círculo blanco)
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(16, 10, 7, 0, Math.PI*2);
+    ctx.fill();
+
+    // Ojos del cráneo (negros)
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.arc(13.5, 9, 1.2, 0, Math.PI*2);
+    ctx.arc(18.5, 9, 1.2, 0, Math.PI*2);
+    ctx.fill();
+
+    // Boca (línea)
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(13, 12);
+    ctx.lineTo(19, 12);
+    ctx.stroke();
+
+    this.textures.addCanvas('skeleton', canvas);
+  }
+
+  createPawTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 24;
+    canvas.height = 24;
+    const ctx = canvas.getContext('2d');
+
+    // Garra (círculo blanco con "dedos")
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.ellipse(12, 14, 7, 5, 0, 0, Math.PI*2);
+    ctx.fill();
+
+    // Dedos
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(8, 9, 2.5, 0, Math.PI*2);
+    ctx.arc(12, 6, 2.5, 0, Math.PI*2);
+    ctx.arc(16, 9, 2.5, 0, Math.PI*2);
+    ctx.fill();
+
+    // Borde negro
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    this.textures.addCanvas('paw', canvas);
+  }
 }
 
 class DungeonScene extends Phaser.Scene {
@@ -33,14 +171,15 @@ class DungeonScene extends Phaser.Scene {
     this.mapHeight = 15;
     this.playerSpeed = 160;
     this.playerHP = 100;
-    this.attackCooldown = 500; // milisegundos entre ataques
+    this.attackCooldown = 500;
     this.lastAttackTime = 0;
     this.invulnerable = false;
-    this.invulnerableDuration = 1000; // 1 segundo de invulnerabilidad tras recibir daño
+    this.invulnerableDuration = 1000;
+    this.facing = 'right'; // dirección inicial
   }
 
   create() {
-    // Mapa (igual que antes)
+    // Mapa (puedes cambiarlo más adelante)
     this.mapData = [
       [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
       [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -77,18 +216,18 @@ class DungeonScene extends Phaser.Scene {
       }
     }
 
-    // Jugador
-    this.player = this.physics.add.sprite(3 * this.tileSize, 3 * this.tileSize, 'player');
+    // Jugador (gato)
+    this.player = this.physics.add.sprite(3 * this.tileSize, 3 * this.tileSize, 'cat');
     this.player.setCollideWorldBounds(true);
-    this.playerHP = 100; // Reiniciamos vida
+    this.playerHP = 100;
     this.physics.add.collider(this.player, this.wallLayer);
 
-    // Enemigos
+    // Enemigos (esqueletos)
     this.enemies = this.physics.add.group();
-    this.spawnEnemy(10 * this.tileSize, 10 * this.tileSize);
-    this.spawnEnemy(15 * this.tileSize, 5 * this.tileSize);
+    this.spawnSkeleton(10 * this.tileSize, 10 * this.tileSize);
+    this.spawnSkeleton(15 * this.tileSize, 5 * this.tileSize);
 
-    // Colisión entre enemigos y paredes
+    // Colisión enemigos-paredes
     this.physics.add.collider(this.enemies, this.wallLayer);
 
     // Cámara
@@ -105,17 +244,16 @@ class DungeonScene extends Phaser.Scene {
     this.createAttackButton();
   }
 
-  spawnEnemy(x, y) {
-    const enemy = this.enemies.create(x, y, 'enemy');
-    enemy.setCollideWorldBounds(true);
-    enemy.health = 50;
-    enemy.speed = 80;
-    enemy.damage = 10;
-    enemy.body.setSize(30, 30); // ajustar hitbox
-    // Barra de vida del enemigo
-    enemy.healthBar = this.add.graphics();
-    enemy.healthBar.setDepth(5);
-    this.updateEnemyHealthBar(enemy);
+  spawnSkeleton(x, y) {
+    const skeleton = this.enemies.create(x, y, 'skeleton');
+    skeleton.setCollideWorldBounds(true);
+    skeleton.health = 40;      // 2 golpes de 20 de daño
+    skeleton.speed = 60;       // un poco lento
+    skeleton.damage = 3;       // quita 3 HP por golpe
+    skeleton.body.setSize(30, 30);
+    skeleton.healthBar = this.add.graphics();
+    skeleton.healthBar.setDepth(5);
+    this.updateEnemyHealthBar(skeleton);
   }
 
   updateEnemyHealthBar(enemy) {
@@ -124,17 +262,14 @@ class DungeonScene extends Phaser.Scene {
     const height = 4;
     const x = enemy.x - width/2;
     const y = enemy.y - 20;
-    // Fondo
     enemy.healthBar.fillStyle(0x000000, 0.8);
     enemy.healthBar.fillRect(x, y, width, height);
-    // Relleno según vida
-    const healthPercent = Phaser.Math.Clamp(enemy.health / 50, 0, 1);
+    const healthPercent = Phaser.Math.Clamp(enemy.health / 40, 0, 1);
     enemy.healthBar.fillStyle(0xff0000, 1);
     enemy.healthBar.fillRect(x, y, width * healthPercent, height);
   }
 
   createHUD() {
-    // Barra de vida del jugador (fija en pantalla)
     this.playerHealthBar = this.add.graphics().setScrollFactor(0).setDepth(20);
     this.updatePlayerHealthBar();
   }
@@ -145,14 +280,11 @@ class DungeonScene extends Phaser.Scene {
     const height = 15;
     const x = 10;
     const y = 10;
-    // Fondo
     this.playerHealthBar.fillStyle(0x000000, 0.8);
     this.playerHealthBar.fillRect(x, y, width, height);
-    // Relleno
     const healthPercent = Phaser.Math.Clamp(this.playerHP / 100, 0, 1);
     this.playerHealthBar.fillStyle(0x00ff00, 1);
     this.playerHealthBar.fillRect(x, y, width * healthPercent, height);
-    // Borde
     this.playerHealthBar.lineStyle(2, 0xffffff, 0.5);
     this.playerHealthBar.strokeRect(x, y, width, height);
   }
@@ -163,7 +295,6 @@ class DungeonScene extends Phaser.Scene {
     btn.on('pointerdown', () => {
       this.playerAttack();
     });
-    // Texto
     this.add.text(340, 650, '⚔️', { fontSize: '24px' }).setOrigin(0.5).setScrollFactor(0).setDepth(11);
   }
 
@@ -172,22 +303,31 @@ class DungeonScene extends Phaser.Scene {
     if (now - this.lastAttackTime < this.attackCooldown) return;
     this.lastAttackTime = now;
 
-    // Efecto visual de ataque (círculo blanco temporal)
-    const slash = this.add.circle(this.player.x, this.player.y, 40, 0xffffff, 0.5).setDepth(5);
+    // Mostrar garra según dirección
+    let offsetX = 0, offsetY = 0;
+    const range = 50;
+    switch (this.facing) {
+      case 'right': offsetX = range * 0.6; break;
+      case 'left':  offsetX = -range * 0.6; break;
+      case 'up':    offsetY = -range * 0.6; break;
+      case 'down':  offsetY = range * 0.6; break;
+    }
+
+    const paw = this.add.image(this.player.x + offsetX, this.player.y + offsetY, 'paw').setDepth(6);
     this.tweens.add({
-      targets: slash,
-      scale: 0.5,
+      targets: paw,
+      scale: 0.8,
       alpha: 0,
       duration: 200,
-      onComplete: () => slash.destroy()
+      onComplete: () => paw.destroy()
     });
 
-    // Comprobar enemigos en rango
+    // Daño a enemigos en rango
     this.enemies.children.iterate((enemy) => {
       if (!enemy.active) return;
       const dist = Phaser.Math.Distance.Between(this.player.x, this.player.y, enemy.x, enemy.y);
-      if (dist <= 50) { // alcance del ataque
-        enemy.health -= 20; // daño del ataque
+      if (dist <= range) {
+        enemy.health -= 20;
         this.updateEnemyHealthBar(enemy);
         if (enemy.health <= 0) {
           enemy.destroy();
@@ -252,13 +392,20 @@ class DungeonScene extends Phaser.Scene {
       this.player.setVelocity(0, 0);
     }
 
-    // Movimiento de enemigos (persecución simple)
+    // Actualizar dirección del gato según el movimiento
+    if (Math.abs(this.joystickVector.x) > 0.2) {
+      this.facing = this.joystickVector.x > 0 ? 'right' : 'left';
+    } else if (Math.abs(this.joystickVector.y) > 0.2) {
+      this.facing = this.joystickVector.y > 0 ? 'down' : 'up';
+    }
+
+    // Movimiento de enemigos (persecución)
     this.enemies.children.iterate((enemy) => {
       if (!enemy.active) return;
       const dx = this.player.x - enemy.x;
       const dy = this.player.y - enemy.y;
       const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist > 0 && dist < 300) { // rango de detección
+      if (dist > 0 && dist < 300) {
         const vx = (dx / dist) * enemy.speed;
         const vy = (dy / dist) * enemy.speed;
         enemy.setVelocity(vx, vy);
@@ -277,7 +424,7 @@ class DungeonScene extends Phaser.Scene {
         this.time.delayedCall(this.invulnerableDuration, () => {
           this.invulnerable = false;
         });
-        // Efecto visual de daño (parpadeo)
+        // Parpadeo rojo
         this.tweens.add({
           targets: this.player,
           alpha: 0.5,
@@ -292,9 +439,7 @@ class DungeonScene extends Phaser.Scene {
         }
       }
 
-      // Actualizar barra de vida enemiga posición
-      enemy.healthBar.x = enemy.x - 15;
-      enemy.healthBar.y = enemy.y - 20;
+      // Actualizar posición de la barra de vida
       enemy.healthBar.setPosition(enemy.x - 15, enemy.y - 20);
     });
   }
