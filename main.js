@@ -166,7 +166,11 @@ class BootScene extends Phaser.Scene {
     this.createCatTextureByRank('cat_burger', '#FF8C00', '#ffffff');
     this.createCatTextureByRank('cat_rey', '#FFD700', '#000000');
     this.createCatTextureByRank('cat_divinidad', '#FF4500', '#ffffff');
-    this.createCatTextureByRank('cat_base', '#111111', '#00ff00'); // Base con contorno blanco
+    this.createCatTextureByRank('cat_base', '#111111', '#00ff00');
+
+    // Decoraciones para el mundo
+    this.createTreeTexture();
+    this.createFlowerTexture();
 
     this.scene.start('MenuScene');
   }
@@ -509,6 +513,37 @@ class BootScene extends Phaser.Scene {
     ctx.beginPath(); ctx.arc(20,18,0.8,0,Math.PI*2); ctx.fill();
     this.textures.addCanvas('slime', c);
   }
+
+  // --- NUEVAS TEXTURAS DE DECORACIÓN ---
+  createTreeTexture() {
+    const c = document.createElement('canvas');
+    c.width = 64; c.height = 96;
+    const ctx = c.getContext('2d');
+    // Tronco
+    ctx.fillStyle = '#8B4513';
+    ctx.fillRect(24, 48, 16, 48);
+    // Copa del árbol (círculos verdes)
+    ctx.fillStyle = '#2E8B57';
+    ctx.beginPath(); ctx.arc(32, 32, 28, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#3CB371';
+    ctx.beginPath(); ctx.arc(32, 32, 22, 0, Math.PI*2); ctx.fill();
+    // Detalles de ramas
+    ctx.strokeStyle = '#8B4513';
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(32, 50); ctx.lineTo(32, 30); ctx.stroke();
+    this.textures.addCanvas('arbol', c);
+  }
+
+  createFlowerTexture() {
+    const c = document.createElement('canvas');
+    c.width = 16; c.height = 16;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#FF69B4';
+    ctx.beginPath(); ctx.arc(8, 8, 5, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath(); ctx.arc(8, 8, 2, 0, Math.PI*2); ctx.fill();
+    this.textures.addCanvas('flor', c);
+  }
 }
 
 // ========== MENÚ PRINCIPAL ==========
@@ -519,7 +554,6 @@ class MenuScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('#1a1a2e');
     this.add.text(400, 80, '⚔️ Mazmorras 2D ⚔️', { fontSize: '48px', color: '#ffd700' }).setOrigin(0.5);
 
-    // Botones
     const btnJugar = this.createButton(400, 180, 'Jugar', 0x3777ca);
     btnJugar.on('pointerdown', () => { this.scene.start('WorldScene'); });
 
@@ -529,11 +563,9 @@ class MenuScene extends Phaser.Scene {
     const btnPerfil = this.createButton(400, 340, 'Perfil', 0x9b59b6);
     btnPerfil.on('pointerdown', () => { this.scene.start('ProfileScene'); });
 
-    // Botón Modo Dios
     const btnDios = this.createButton(400, 420, 'Modo Dios', 0xff4500);
     btnDios.on('pointerdown', () => { this.activarModoDios(); });
 
-    // Mostrar oro y nivel
     const gold = parseInt(localStorage.getItem('gold') || '0');
     const level = parseInt(localStorage.getItem('level') || '1');
     this.add.text(400, 520, `🪙 ${gold}    Nivel: ${level}`, { fontSize: '24px', color: '#fff' }).setOrigin(0.5);
@@ -737,7 +769,6 @@ class ProfileScene extends Phaser.Scene {
     this.add.text(400, 420, `🧪 Pociones: ${potions}`, { fontSize: '18px', color: '#fff' }).setOrigin(0.5);
     this.add.text(400, 450, `✨ Habilidad nivel: ${ability}`, { fontSize: '18px', color: '#fff' }).setOrigin(0.5);
 
-    // Botón "?" (cómo jugar)
     const btnAyuda = this.add.circle(700, 80, 25, 0xffffff, 0.8).setInteractive({ useHandCursor: true });
     this.add.text(700, 80, '?', { fontSize: '30px', color: '#000' }).setOrigin(0.5);
     btnAyuda.on('pointerdown', () => {
@@ -764,16 +795,39 @@ class WorldScene extends Phaser.Scene {
     this.mapWidth = 100;
     this.mapHeight = 100;
     this.playerSpeed = 200;
+    this.modalActive = false;
 
-    if (!this.textures.exists('cesped')) {
-      this.createTileTexture('cesped', 64, 64, '#4a8f3c');
-    }
-    if (!this.textures.exists('agua')) {
-      this.createTileTexture('agua', 64, 64, '#3366cc');
-    }
+    // --- FONDO: Cielo y sol ---
+    const sky = this.add.graphics();
+    sky.fillGradientStyle(0x87CEEB, 0x87CEEB, 0x4682B4, 0x4682B4, 1);
+    sky.fillRect(0, 0, this.mapWidth * this.tileSize, this.mapHeight * this.tileSize);
+    sky.setDepth(-10);
 
+    // Sol
+    const sun = this.add.circle(200, 150, 80, 0xFFFF00).setDepth(-5);
+    const sunGlow = this.add.circle(200, 150, 120, 0xFFFF00, 0.3).setDepth(-6);
+
+    // --- Suelo de césped ---
     this.add.tileSprite(0, 0, this.mapWidth * this.tileSize, this.mapHeight * this.tileSize, 'cesped').setOrigin(0);
 
+    // --- Decoración: árboles y flores (sin colisión) ---
+    this.decorations = this.add.group();
+    for (let i = 0; i < 150; i++) {
+      const x = Phaser.Math.Between(0, this.mapWidth - 1) * this.tileSize;
+      const y = Phaser.Math.Between(0, this.mapHeight - 1) * this.tileSize;
+      const arbol = this.add.image(x, y, 'arbol').setOrigin(0.5, 1);
+      arbol.setDepth(Phaser.Math.Between(1, 3));
+      this.decorations.add(arbol);
+    }
+    for (let i = 0; i < 100; i++) {
+      const x = Phaser.Math.Between(0, this.mapWidth - 1) * this.tileSize;
+      const y = Phaser.Math.Between(0, this.mapHeight - 1) * this.tileSize;
+      const flor = this.add.image(x, y, 'flor').setOrigin(0.5);
+      flor.setDepth(Phaser.Math.Between(0, 2));
+      this.decorations.add(flor);
+    }
+
+    // --- Obstáculos (rocas) ---
     this.obstacles = this.physics.add.staticGroup();
     for (let i = 0; i < 50; i++) {
       const x = Phaser.Math.Between(0, this.mapWidth - 1) * this.tileSize;
@@ -785,6 +839,7 @@ class WorldScene extends Phaser.Scene {
       rock.setDepth(1);
     }
 
+    // --- Jugador ---
     const spawnX = 5 * this.tileSize;
     const spawnY = 5 * this.tileSize;
     this.player = this.physics.add.sprite(spawnX, spawnY, this.getCatTextureKey());
@@ -794,6 +849,7 @@ class WorldScene extends Phaser.Scene {
     this.playerHP = parseInt(localStorage.getItem('maxHP') || '100');
     this.playerMaxHP = this.playerHP;
 
+    // --- Enemigos (slimes) ---
     this.enemies = this.physics.add.group();
     for (let i = 0; i < 20; i++) {
       const x = Phaser.Math.Between(10, this.mapWidth - 2) * this.tileSize;
@@ -810,6 +866,7 @@ class WorldScene extends Phaser.Scene {
       this.physics.add.collider(slime, this.obstacles);
     }
 
+    // --- Portales a mazmorras ---
     this.portals = this.physics.add.staticGroup();
     const portalPositions = [
       { x: 2, y: 2, key: 'portal_cripta', mazmorraIndex: 0 },
@@ -839,10 +896,12 @@ class WorldScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
     this.cameras.main.setBounds(0, 0, this.mapWidth * this.tileSize, this.mapHeight * this.tileSize);
 
+    // --- HUD, joystick, ataque, botones ---
     this.createHUD();
     this.createVirtualJoystick();
     this.createAttackButton();
     this.createBackButton();
+    this.createInventoryButton();
   }
 
   getCatTextureKey() {
@@ -947,7 +1006,107 @@ class WorldScene extends Phaser.Scene {
     btn.on('pointerdown', () => { this.scene.start('MenuScene'); });
   }
 
+  // --- NUEVO: Botón de inventario ---
+  createInventoryButton() {
+    const btn = this.add.circle(700, 40, 25, 0x666666, 0.8).setScrollFactor(0).setDepth(40);
+    btn.setInteractive({ useHandCursor: true });
+    this.add.text(700, 40, '🎒', { fontSize: '20px' }).setOrigin(0.5).setScrollFactor(0).setDepth(41);
+    btn.on('pointerdown', () => {
+      this.showInventoryModal();
+    });
+  }
+
+  // --- NUEVO: Mostrar modal de inventario ---
+  showInventoryModal() {
+    if (this.modalActive) return;
+    this.modalActive = true;
+    this.physics.pause();
+
+    const gold = parseInt(localStorage.getItem('gold') || '0');
+    const level = parseInt(localStorage.getItem('level') || '1');
+    const xp = parseInt(localStorage.getItem('xp') || '0');
+    const xpNecesario = 100 * level;
+    const sword = parseInt(localStorage.getItem('swordLevel') || '1');
+    const armor = parseInt(localStorage.getItem('armorLevel') || '1');
+    const potions = parseInt(localStorage.getItem('potions') || '0');
+    const ability = parseInt(localStorage.getItem('abilityLevel') || '1');
+    const rango = getRango(level);
+
+    const lines = [
+      `Nivel: ${level}`,
+      `XP: ${xp}/${xpNecesario}`,
+      `Rango: ${rango.nombre}`,
+      `Oro: ${gold}`,
+      `Espada nivel: ${sword}`,
+      `Armadura nivel: ${armor}`,
+      `Pociones: ${potions}`,
+      `Habilidad nivel: ${ability}`
+    ];
+
+    this.showModal('Inventario', lines);
+  }
+
+  // --- NUEVO: Mostrar modal genérico ---
+  showModal(title, lines) {
+    // Fondo semitransparente
+    this.modalBackground = this.add.rectangle(400, 225, 800, 450, 0x000000, 0.7)
+      .setScrollFactor(0)
+      .setDepth(100);
+
+    // Panel
+    this.modalPanel = this.add.rectangle(400, 225, 400, 300, 0xffffff, 1)
+      .setScrollFactor(0)
+      .setDepth(101);
+
+    // Título
+    this.add.text(400, 90, title, { fontSize: '28px', color: '#000' })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(102);
+
+    // Contenido
+    let yPos = 130;
+    lines.forEach(line => {
+      this.add.text(400, yPos, line, { fontSize: '20px', color: '#000' })
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(102);
+      yPos += 30;
+    });
+
+    // Botón cerrar
+    const closeBtn = this.add.rectangle(400, 380, 120, 40, 0xff0000, 1)
+      .setInteractive({ useHandCursor: true })
+      .setScrollFactor(0)
+      .setDepth(102);
+    this.add.text(400, 380, 'Cerrar', { fontSize: '20px', color: '#fff' })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(103);
+
+    closeBtn.on('pointerdown', () => {
+      this.closeModal();
+    });
+  }
+
+  // --- NUEVO: Cerrar modal ---
+  closeModal() {
+    if (!this.modalActive) return;
+    this.modalActive = false;
+    this.physics.resume();
+    // Destruir elementos del modal
+    if (this.modalBackground) this.modalBackground.destroy();
+    if (this.modalPanel) this.modalPanel.destroy();
+    // Obtener todos los objetos con depth >= 102 y destruirlos (excepto el fondo y panel ya destruidos)
+    this.children.list.forEach(child => {
+      if (child.depth >= 102) {
+        child.destroy();
+      }
+    });
+  }
+
   playerAttack() {
+    if (this.modalActive) return;
     const now = this.time.now;
     if (now - this.lastAttackTime < 500) return;
     this.lastAttackTime = now;
@@ -1020,6 +1179,8 @@ class WorldScene extends Phaser.Scene {
   }
 
   update(time, delta) {
+    if (this.modalActive) return;
+
     this.player.setVelocity(
       this.joystickVector.x * this.playerSpeed,
       this.joystickVector.y * this.playerSpeed
@@ -1082,6 +1243,7 @@ class DungeonScene extends Phaser.Scene {
     this.invulnerable = false;
     this.invulnerableDuration = 1000;
     this.facing = 'right';
+    this.modalActive = false;
 
     this.createTileTexture('suelo_maz', 64, 64, mazmorra.colorSuelo);
     this.createTileTexture('pared_maz', 64, 64, mazmorra.colorPared);
@@ -1187,6 +1349,7 @@ class DungeonScene extends Phaser.Scene {
 
     this.physics.add.collider(this.enemies, this.wallLayer);
     this.physics.add.collider(this.jefes, this.wallLayer);
+    // Los cofres son sólidos
     this.physics.add.collider(this.player, this.chests);
 
     this.physics.world.setBounds(0, 0, mapa[0].length * this.tileSize, mapa.length * this.tileSize);
@@ -1198,6 +1361,7 @@ class DungeonScene extends Phaser.Scene {
     this.createVirtualJoystick();
     this.createAttackButton();
     this.createBackButton();
+    this.createInventoryButton();
   }
 
   getCatTextureKey() {
@@ -1378,7 +1542,96 @@ class DungeonScene extends Phaser.Scene {
     btn.on('pointerdown', () => { this.scene.start('MenuScene'); });
   }
 
+  createInventoryButton() {
+    const btn = this.add.circle(700, 40, 25, 0x666666, 0.8).setScrollFactor(0).setDepth(40);
+    btn.setInteractive({ useHandCursor: true });
+    this.add.text(700, 40, '🎒', { fontSize: '20px' }).setOrigin(0.5).setScrollFactor(0).setDepth(41);
+    btn.on('pointerdown', () => {
+      this.showInventoryModal();
+    });
+  }
+
+  showInventoryModal() {
+    if (this.modalActive) return;
+    this.modalActive = true;
+    this.physics.pause();
+
+    const gold = parseInt(localStorage.getItem('gold') || '0');
+    const level = parseInt(localStorage.getItem('level') || '1');
+    const xp = parseInt(localStorage.getItem('xp') || '0');
+    const xpNecesario = 100 * level;
+    const sword = parseInt(localStorage.getItem('swordLevel') || '1');
+    const armor = parseInt(localStorage.getItem('armorLevel') || '1');
+    const potions = parseInt(localStorage.getItem('potions') || '0');
+    const ability = parseInt(localStorage.getItem('abilityLevel') || '1');
+    const rango = getRango(level);
+
+    const lines = [
+      `Nivel: ${level}`,
+      `XP: ${xp}/${xpNecesario}`,
+      `Rango: ${rango.nombre}`,
+      `Oro: ${gold}`,
+      `Espada nivel: ${sword}`,
+      `Armadura nivel: ${armor}`,
+      `Pociones: ${potions}`,
+      `Habilidad nivel: ${ability}`
+    ];
+
+    this.showModal('Inventario', lines);
+  }
+
+  showModal(title, lines) {
+    this.modalBackground = this.add.rectangle(400, 225, 800, 450, 0x000000, 0.7)
+      .setScrollFactor(0)
+      .setDepth(100);
+
+    this.modalPanel = this.add.rectangle(400, 225, 400, 300, 0xffffff, 1)
+      .setScrollFactor(0)
+      .setDepth(101);
+
+    this.add.text(400, 90, title, { fontSize: '28px', color: '#000' })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(102);
+
+    let yPos = 130;
+    lines.forEach(line => {
+      this.add.text(400, yPos, line, { fontSize: '20px', color: '#000' })
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(102);
+      yPos += 30;
+    });
+
+    const closeBtn = this.add.rectangle(400, 380, 120, 40, 0xff0000, 1)
+      .setInteractive({ useHandCursor: true })
+      .setScrollFactor(0)
+      .setDepth(102);
+    this.add.text(400, 380, 'Cerrar', { fontSize: '20px', color: '#fff' })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(103);
+
+    closeBtn.on('pointerdown', () => {
+      this.closeModal();
+    });
+  }
+
+  closeModal() {
+    if (!this.modalActive) return;
+    this.modalActive = false;
+    this.physics.resume();
+    if (this.modalBackground) this.modalBackground.destroy();
+    if (this.modalPanel) this.modalPanel.destroy();
+    this.children.list.forEach(child => {
+      if (child.depth >= 102) {
+        child.destroy();
+      }
+    });
+  }
+
   playerAttack() {
+    if (this.modalActive) return;
     const now = this.time.now;
     if (now - this.lastAttackTime < 500) return;
     this.lastAttackTime = now;
@@ -1387,6 +1640,7 @@ class DungeonScene extends Phaser.Scene {
     const paw = this.add.image(this.player.x + (this.facing === 'right' ? 30 : this.facing === 'left' ? -30 : 0), this.player.y + (this.facing === 'down' ? 30 : this.facing === 'up' ? -30 : 0), 'paw').setDepth(15);
     this.tweens.add({ targets: paw, scale: 0.5, alpha: 0, duration: 200, onComplete: () => paw.destroy() });
 
+    // Daño a enemigos
     this.enemies.children.iterate((enemy) => {
       if (!enemy.active) return;
       const dist = Phaser.Math.Distance.Between(this.player.x, this.player.y, enemy.x, enemy.y);
@@ -1403,6 +1657,7 @@ class DungeonScene extends Phaser.Scene {
       }
     });
 
+    // Daño a jefes
     this.jefes.children.iterate((jefe) => {
       if (!jefe.active) return;
       const dist = Phaser.Math.Distance.Between(this.player.x, this.player.y, jefe.x, jefe.y);
@@ -1418,6 +1673,57 @@ class DungeonScene extends Phaser.Scene {
         }
       }
     });
+
+    // --- NUEVO: Abrir cofres al golpearlos ---
+    this.chests.children.iterate((cofre) => {
+      if (!cofre.active) return;
+      const dist = Phaser.Math.Distance.Between(this.player.x, this.player.y, cofre.x, cofre.y);
+      if (dist <= range) {
+        this.abrirCofre(cofre);
+      }
+    });
+  }
+
+  abrirCofre(cofre) {
+    if (!cofre.active) return;
+    const tipo = cofre.getData('tipo');
+    cofre.destroy();
+
+    // Generar botín
+    let lineas = [];
+    if (tipo === 'plata') {
+      const oro = 50;
+      let potions = 0;
+      if (Math.random() < 0.3) {
+        potions = 1;
+      }
+      // Aplicar
+      let gold = parseInt(localStorage.getItem('gold') || '0');
+      gold += oro;
+      localStorage.setItem('gold', gold);
+      if (potions > 0) {
+        let totalPotions = parseInt(localStorage.getItem('potions') || '0');
+        totalPotions += potions;
+        localStorage.setItem('potions', totalPotions);
+      }
+      lineas.push(`Oro: +${oro}`);
+      if (potions > 0) lineas.push(`Pociones: +${potions}`);
+      this.moneyText.setText(`🪙 ${gold}`);
+    } else if (tipo === 'oro') {
+      const oro = 100;
+      const potions = 2;
+      let gold = parseInt(localStorage.getItem('gold') || '0');
+      gold += oro;
+      localStorage.setItem('gold', gold);
+      let totalPotions = parseInt(localStorage.getItem('potions') || '0');
+      totalPotions += potions;
+      localStorage.setItem('potions', totalPotions);
+      lineas.push(`Oro: +${oro}`);
+      lineas.push(`Pociones: +${potions}`);
+      this.moneyText.setText(`🪙 ${gold}`);
+    }
+
+    this.showModal('Cofre abierto', lineas);
   }
 
   killEnemy(enemy) {
@@ -1441,25 +1747,12 @@ class DungeonScene extends Phaser.Scene {
     localStorage.setItem('xp', xp);
     jefe.destroy();
 
+    // Cofre dorado aparece en posición del jefe
     const chest = this.chests.create(jefe.x, jefe.y, 'cofre_oro');
     chest.setData('tipo', 'oro');
     chest.body.setSize(this.tileSize, this.tileSize);
     chest.setDepth(2);
-    this.physics.add.overlap(this.player, chest, (player, cofre) => {
-      if (cofre.active) {
-        cofre.destroy();
-        const tipo = cofre.getData('tipo');
-        if (tipo === 'oro') {
-          let potions = parseInt(localStorage.getItem('potions') || '0');
-          potions += 2;
-          localStorage.setItem('potions', potions);
-          alert('Cofre dorado abierto: 2 pociones y 100 oro.');
-          gold += 100;
-          localStorage.setItem('gold', gold);
-          this.moneyText.setText(`🪙 ${gold}`);
-        }
-      }
-    });
+    // No se abre automáticamente; debe ser golpeado
 
     this.checkLevelUp();
   }
@@ -1486,6 +1779,8 @@ class DungeonScene extends Phaser.Scene {
   }
 
   update(time, delta) {
+    if (this.modalActive) return;
+
     this.player.setVelocity(
       this.joystickVector.x * this.playerSpeed,
       this.joystickVector.y * this.playerSpeed
@@ -1506,26 +1801,6 @@ class DungeonScene extends Phaser.Scene {
         this.time.delayedCall(1000, () => { this.invulnerable = false; });
         this.tweens.add({ targets: this.player, alpha: 0.5, duration: 100, yoyo: true, repeat: 5, onComplete: () => { this.player.alpha = 1; } });
         if (this.playerHP <= 0) this.playerDeath();
-      }
-    });
-
-    this.physics.overlap(this.player, this.chests, (player, chest) => {
-      if (chest.active) {
-        chest.destroy();
-        const tipo = chest.getData('tipo');
-        let gold = parseInt(localStorage.getItem('gold') || '0');
-        if (tipo === 'plata') {
-          gold += 50;
-          alert('Cofre de plata: +50 oro.');
-        } else if (tipo === 'oro') {
-          gold += 100;
-          let potions = parseInt(localStorage.getItem('potions') || '0');
-          potions += 2;
-          localStorage.setItem('potions', potions);
-          alert('Cofre dorado: +100 oro y 2 pociones.');
-        }
-        localStorage.setItem('gold', gold);
-        this.moneyText.setText(`🪙 ${gold}`);
       }
     });
 
