@@ -1,126 +1,143 @@
-// Configuración general del juego
+// Configuración del juego
 const config = {
   type: Phaser.AUTO,
-  width: 400,            // Ancho lógico (se ajustará a la pantalla)
-  height: 700,           // Alto lógico
+  width: 400,
+  height: 700,
   parent: 'game-container',
-  backgroundColor: '#1a1a2e',
+  backgroundColor: '#111',
   physics: {
     default: 'arcade',
-    arcade: {
-      gravity: { y: 0 },
-      debug: false
-    }
+    arcade: { gravity: { y: 0 }, debug: false }
   },
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
-  scene: [BootScene, GameScene]
+  scene: [BootScene, DungeonScene]
 };
 
-// ========== ESCENA DE CARGA ==========
+// ========== TEXTURAS ==========
 class BootScene extends Phaser.Scene {
-  constructor() {
-    super('BootScene');
-  }
+  constructor() { super('BootScene'); }
 
   create() {
-    // Creamos texturas simples (sin imágenes externas)
+    // Generamos texturas simples
+    this.createTile('suelo', 0x3a3a5c, 64, 64);
+    this.createTile('pared', 0x8b4513, 64, 64);
     this.createPlayerTexture();
-    this.createGroundTexture();
-    this.createObstacleTexture();
+    this.createEnemyTexture();
 
-    // Pasamos a la escena del juego
-    this.scene.start('GameScene');
+    this.scene.start('DungeonScene');
+  }
+
+  createTile(key, color, w, h) {
+    const g = this.add.graphics();
+    g.fillStyle(color, 1);
+    g.fillRect(0, 0, w, h);
+    g.lineStyle(2, 0x000000, 0.3);
+    g.strokeRect(0, 0, w, h);
+    g.generateTexture(key, w, h);
+    g.destroy();
   }
 
   createPlayerTexture() {
-    const graphics = this.add.graphics();
-    graphics.fillStyle(0x4dd599, 1);
-    graphics.fillRoundedRect(0, 0, 32, 32, 6);
-    graphics.generateTexture('player', 32, 32);
-    graphics.destroy();
+    const g = this.add.graphics();
+    g.fillStyle(0x4dd599, 1);
+    g.fillRoundedRect(0, 0, 32, 32, 6);
+    g.generateTexture('player', 32, 32);
+    g.destroy();
   }
 
-  createGroundTexture() {
-    const graphics = this.add.graphics();
-    graphics.fillStyle(0x3a3a5c, 1);
-    graphics.fillRect(0, 0, 64, 64);
-    graphics.lineStyle(2, 0x2a2a3c, 1);
-    graphics.strokeRect(1, 1, 62, 62);
-    graphics.generateTexture('ground', 64, 64);
-    graphics.destroy();
-  }
-
-  createObstacleTexture() {
-    const graphics = this.add.graphics();
-    graphics.fillStyle(0x8b4513, 1);
-    graphics.fillRect(0, 0, 32, 32);
-    graphics.lineStyle(2, 0x5a2e0a, 1);
-    graphics.strokeRect(0, 0, 32, 32);
-    graphics.generateTexture('obstacle', 32, 32);
-    graphics.destroy();
+  createEnemyTexture() {
+    const g = this.add.graphics();
+    g.fillStyle(0xff5555, 1);
+    g.fillCircle(16, 16, 16);
+    g.generateTexture('enemy', 32, 32);
+    g.destroy();
   }
 }
 
-// ========== ESCENA DEL JUEGO ==========
-class GameScene extends Phaser.Scene {
+// ========== ESCENA DE MAZMORRA ==========
+class DungeonScene extends Phaser.Scene {
   constructor() {
-    super('GameScene');
+    super('DungeonScene');
+    this.tileSize = 64;
+    this.mapWidth = 20;  // en tiles
+    this.mapHeight = 15;
   }
 
   create() {
-    // Creamos un fondo de tiles (suelo)
-    this.add.tileSprite(0, 0, 400, 700, 'ground').setOrigin(0, 0);
+    // Definición del mapa (0 = suelo, 1 = pared)
+    // Puedes modificar esta matriz para crear diferentes mazmorras
+    this.mapData = [
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ];
 
-    // Obstáculos simples (puedes cambiarlos después)
-    this.add.image(200, 200, 'obstacle');
-    this.add.image(120, 350, 'obstacle');
-    this.add.image(300, 450, 'obstacle');
+    // Creamos el grupo de suelos y paredes
+    this.groundLayer = this.add.group();
+    this.wallLayer = this.physics.add.staticGroup();
+
+    for (let y = 0; y < this.mapHeight; y++) {
+      for (let x = 0; x < this.mapWidth; x++) {
+        const tile = this.mapData[y][x];
+        const posX = x * this.tileSize;
+        const posY = y * this.tileSize;
+        if (tile === 0) {
+          this.add.image(posX, posY, 'suelo').setOrigin(0);
+        } else if (tile === 1) {
+          const wall = this.add.image(posX, posY, 'pared').setOrigin(0);
+          this.wallLayer.add(wall);
+          wall.body.setSize(this.tileSize, this.tileSize);
+        }
+      }
+    }
 
     // Jugador
-    this.player = this.physics.add.sprite(200, 600, 'player');
+    this.player = this.physics.add.sprite(3 * this.tileSize, 3 * this.tileSize, 'player');
     this.player.setCollideWorldBounds(true);
+    this.physics.add.collider(this.player, this.wallLayer);
 
     // Cámara sigue al jugador
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+    this.cameras.main.setBounds(0, 0, this.mapWidth * this.tileSize, this.mapHeight * this.tileSize);
 
-    // Inicializar joystick virtual
+    // Joystick virtual
     this.createVirtualJoystick();
   }
 
   createVirtualJoystick() {
-    // Base del joystick (fondo)
-    this.joystickBase = this.add.circle(80, 600, 45, 0xffffff, 0.3);
-    this.joystickBase.setScrollFactor(0); // Fijo en pantalla
-
-    // Thumb (palanca)
-    this.joystickThumb = this.add.circle(80, 600, 20, 0xffffff, 0.8);
-    this.joystickThumb.setScrollFactor(0);
-
+    this.joystickBase = this.add.circle(80, 600, 45, 0xffffff, 0.3).setScrollFactor(0);
+    this.joystickThumb = this.add.circle(80, 600, 20, 0xffffff, 0.8).setScrollFactor(0);
     this.joystickBase.setDepth(10);
     this.joystickThumb.setDepth(11);
 
     this.joystickActive = false;
     this.joystickVector = { x: 0, y: 0 };
 
-    // Eventos táctiles
     this.input.on('pointerdown', (pointer) => {
-      const distance = Phaser.Math.Distance.Between(
-        pointer.x, pointer.y,
-        this.joystickBase.x, this.joystickBase.y
-      );
-      if (distance <= 45) {
+      const dist = Phaser.Math.Distance.Between(pointer.x, pointer.y, this.joystickBase.x, this.joystickBase.y);
+      if (dist <= 45) {
         this.joystickActive = true;
         this.updateJoystick(pointer);
       }
     });
 
     this.input.on('pointermove', (pointer) => {
-      if (this.joystickActive) {
-        this.updateJoystick(pointer);
-      }
+      if (this.joystickActive) this.updateJoystick(pointer);
     });
 
     this.input.on('pointerup', () => {
@@ -134,38 +151,31 @@ class GameScene extends Phaser.Scene {
   updateJoystick(pointer) {
     const dx = pointer.x - this.joystickBase.x;
     const dy = pointer.y - this.joystickBase.y;
-    const maxDistance = 40;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (distance > maxDistance) {
+    const maxDist = 40;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist > maxDist) {
       const angle = Math.atan2(dy, dx);
-      this.joystickThumb.x = this.joystickBase.x + Math.cos(angle) * maxDistance;
-      this.joystickThumb.y = this.joystickBase.y + Math.sin(angle) * maxDistance;
-      this.joystickVector = {
-        x: Math.cos(angle),
-        y: Math.sin(angle)
-      };
+      this.joystickThumb.x = this.joystickBase.x + Math.cos(angle) * maxDist;
+      this.joystickThumb.y = this.joystickBase.y + Math.sin(angle) * maxDist;
+      this.joystickVector = { x: Math.cos(angle), y: Math.sin(angle) };
     } else {
       this.joystickThumb.x = pointer.x;
       this.joystickThumb.y = pointer.y;
-      this.joystickVector = { x: dx / maxDistance, y: dy / maxDistance };
+      this.joystickVector = { x: dx / maxDist, y: dy / maxDist };
     }
   }
 
   update() {
-    // Movimiento del jugador con el joystick
     const speed = 160;
     this.player.setVelocity(
       this.joystickVector.x * speed,
       this.joystickVector.y * speed
     );
-
-    // Si no hay joystick activo, detener
     if (!this.joystickActive) {
       this.player.setVelocity(0, 0);
     }
   }
 }
 
-// ========== INICIAR JUEGO ==========
+// ========== INICIAR ==========
 const game = new Phaser.Game(config);
